@@ -34,17 +34,17 @@ As finalized during the architectural planning phase, InsightFlow strictly adher
 ## 🛠️ Technology Stack
 
 ### Backend
-- **Framework**: Django 4.2 LTS & Django REST Framework (DRF)
-- **Authentication**: JWT (`djangorestframework-simplejwt`) with Token Blacklisting & Rotation
+- **Framework**: Django 4.2.16 & Django REST Framework 3.15.2
+- **Authentication**: JWT using `djangorestframework-simplejwt` 5.3.1
 - **Architecture**: Decoupled, service-oriented Python engines (`WorkflowEngine`, `SLAEngine`, `NotificationService`)
-- **Database**: Relational SQLite (local) / PostgreSQL ready
-- **Testing**: `pytest`, `pytest-django`, `pytest-cov` (**90/90 Unit & Integration Tests Passing**)
+- **Database**: SQLite
+- **Testing**: `pytest`, `pytest-django`, `pytest-cov`
 
 ### Frontend
-- **Framework**: React 18 + Vite (SPA)
+- **Framework**: React 19.2.8 + Vite 8.2.2 (SPA)
 - **Design System**: Vanilla CSS with custom glassmorphism design tokens, vibrant accents, dark mode palette, and CSS variables
 - **Icons**: `lucide-react`
-- **Routing**: `react-router-dom` v6 with role-protected route guards
+- **Routing**: `react-router-dom` 7.18.2 with role-protected route guards
 - **API Communication**: Axios with automatic JWT Bearer token injection and 401 refresh interceptors
 
 ---
@@ -70,7 +70,7 @@ pip install -r requirements.txt
 python manage.py migrate
 
 # Seed complete demo data (departments, workflows, categories, users, sample requests)
-python manage.py seed_data --reset
+python manage.py seed_data
 
 # Start the Django development server
 python manage.py runserver 127.0.0.1:8000
@@ -116,7 +116,7 @@ All seeded demo accounts use the standard password: **`InsightFlow@2026`**
 
 ## 🧪 Running Automated Tests
 
-Run the complete backend test suite (90 tests across 5 modules):
+Run the backend test suite:
 
 ```bash
 cd backend
