@@ -162,12 +162,3 @@ pytest tests/ -v
 | `GET` | `/api/v1/admin/trends/` | Admin | Daily intake request volume trends |
 | `GET` | `/api/v1/admin/requests/` | Admin | Master institutional ledger with multi-filters |
 
----
-
-## 🎯 MCA Viva & Pitch Guide
-
-### Key Differences from Basic Academic Projects:
-1. **Not a simple CRUD app**: Statuses are not arbitrary strings in a database column. They are governed by a state graph in `WorkflowEngine` that verifies stage ownership, permissions, and valid transitions atomically.
-2. **Not fake AI**: Rather than showing static hardcoded percentages or fake ML predictions, the **SLA and Intelligence Engine calculates real elapsed times, threshold comparisons, and dynamic natural language explanations**.
-3. **Enterprise Security**: Role-based access control is enforced at both the DRF view and service layers. Students cannot view or modify other students' requests, and staff cannot act on stages outside their assigned department.
-4. **Institutional Ready**: Includes complete audit trails, internal staff communication notes, file size/MIME verification, and sequential reference numbering (`REQ-YYYY-NNNNN`).
