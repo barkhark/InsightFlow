@@ -574,3 +574,18 @@ class Command(BaseCommand):
                 body='Application received by department officer and queued for stage review.',
                 is_internal=False,
             )
+
+            # If resolved, add realistic student CSAT feedback
+            if req.status == ServiceRequest.Status.RESOLVED:
+                from apps.requests.models import RequestFeedback
+                RequestFeedback.objects.create(
+                    request=req,
+                    student=st,
+                    rating=5,
+                    speed_rating=5,
+                    helpfulness_rating=5,
+                    clarity_rating=5,
+                    comment='Certificate and verification issued promptly. Timeline and status updates were transparent!',
+                    tags=['Prompt Resolution', 'Helpful Staff', 'Clear Instructions'],
+                )
+
