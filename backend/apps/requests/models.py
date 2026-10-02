@@ -200,3 +200,57 @@ class RequestStageHistory(models.Model):
     def __str__(self):
         status = 'current' if self.exited_at is None else f'{self.duration_minutes}min'
         return f'{self.request.reference_number} → {self.stage.name} ({status})'
+
+
+class RequestFeedback(models.Model):
+    """
+    Post-resolution Student Satisfaction (CSAT) rating & review.
+    Submitted by the request's student once resolved or closed.
+    """
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    request = models.OneToOneField(
+        ServiceRequest,
+        on_delete=models.CASCADE,
+        related_name='feedback',
+        help_text='The service request this feedback belongs to.'
+    )
+    student = models.ForeignKey(
+        'accounts.User',
+        on_delete=models.CASCADE,
+        related_name='feedbacks_given'
+    )
+    rating = models.PositiveSmallIntegerField(
+        help_text='Overall rating from 1 to 5 stars.'
+    )
+    speed_rating = models.PositiveSmallIntegerField(
+        default=5,
+        help_text='Rating for resolution speed (1-5).'
+    )
+    helpfulness_rating = models.PositiveSmallIntegerField(
+        default=5,
+        help_text='Rating for staff helpfulness (1-5).'
+    )
+    clarity_rating = models.PositiveSmallIntegerField(
+        default=5,
+        help_text='Rating for process clarity (1-5).'
+    )
+    comment = models.TextField(
+        blank=True,
+        help_text='Optional review comment or feedback.'
+    )
+    tags = models.JSONField(
+        default=list,
+        blank=True,
+        help_text='Aspect tags selected by the student (e.g. "Prompt Resolution", "Helpful Staff").'
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        db_table = 'service_request_feedback'
+        verbose_name = 'Request Feedback'
+        verbose_name_plural = 'Request Feedbacks'
+        ordering = ['-created_at']
+
+    def __str__(self):
+        return f'{self.request.reference_number} Feedback ({self.rating}★ by {self.student.email})'
+

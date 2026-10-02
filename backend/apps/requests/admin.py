@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import ServiceRequest, RequestStageHistory
+from .models import ServiceRequest, RequestStageHistory, RequestFeedback
 
 
 class RequestStageHistoryInline(admin.TabularInline):
@@ -36,3 +36,13 @@ class RequestStageHistoryAdmin(admin.ModelAdmin):
 
     def has_change_permission(self, request, obj=None):
         return False  # Append-only
+
+
+@admin.register(RequestFeedback)
+class RequestFeedbackAdmin(admin.ModelAdmin):
+    list_display = ['request', 'student', 'rating', 'speed_rating', 'helpfulness_rating', 'clarity_rating', 'created_at']
+    list_filter = ['rating', 'created_at']
+    search_fields = ['request__reference_number', 'student__email', 'student__full_name', 'comment']
+    ordering = ['-created_at']
+    readonly_fields = ['id', 'request', 'student', 'created_at']
+
