@@ -20,15 +20,17 @@ from django.db import transaction
 from core.permissions import IsStudent
 from core.workflow_engine import WorkflowEngine
 from core.utils import generate_reference_number
-from apps.requests.models import ServiceRequest
+from apps.requests.models import ServiceRequest, RequestFeedback
 from apps.comments.models import Comment
 from apps.attachments.models import Attachment
 from apps.audit.models import AuditRecord
 from apps.notifications.service import NotificationService
 from .serializers.request_serializers import (
     CreateRequestSerializer, RequestListSerializer,
-    RequestDetailSerializer, CommentSerializer, AttachmentSerializer
+    RequestDetailSerializer, CommentSerializer, AttachmentSerializer,
+    RequestFeedbackSerializer
 )
+
 
 
 class StudentRequestViewSet(viewsets.GenericViewSet):
@@ -236,7 +238,136 @@ class StudentRequestViewSet(viewsets.GenericViewSet):
             'data': AttachmentSerializer(attachment).data
         }, status=status.HTTP_201_CREATED)
 
+    @action(detail=True, methods=['get', 'post'], url_path='feedback')
+    def feedback(self, request, pk=None):
+        """
+        GET  /api/v1/requests/{id}/feedback/ — retrieve feedback
+        POST /api/v1/requests/{id}/feedback/ — submit student CSAT feedback (1-5 stars)
+        """
+        service_request = self._get_own_request(request, pk)
+        if service_request is None:
+            return self._not_found()
+
+        if request.method == 'GET':
+            try:
+                fb = service_request.feedback
+                return Response({'success': True, 'data': RequestFeedbackSerializer(fb).data})
+            except RequestFeedback.DoesNotExist:
+                return Response({'success': True, 'data': None})
+
+        # POST: Must be completed/resolved/closed
+        if not service_request.is_terminal:
+            return Response({
+                'success': False,
+                'data': None,
+                'error': {
+                    'code': 'REQUEST_NOT_TERMINAL',
+                    'message': 'Feedback can only be submitted once a request has reached resolved or terminal status.',
+                    'details': None,
+                }
+            }, status=status.HTTP_400_BAD_REQUEST)
+
+        # Check existing feedback
+        if hasattr(service_request, 'feedback'):
+            return Response({
+                'success': False,
+                'data': None,
+                'error': {
+                    'code': 'FEEDBACK_ALREADY_EXISTS',
+                    'message': 'You have already submitted feedback for this request.',
+                    'details': None,
+                }
+            }, status=status.HTTP_400_BAD_REQUEST)
+
+        serializer = RequestFeedbackSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        feedback_obj = RequestFeedback.objects.create(
+            request=service_request,
+            student=request.user,
+            rating=serializer.validated_data['rating'],
+            speed_rating=serializer.validated_data.get('speed_rating', 5),
+            helpfulness_rating=serializer.validated_data.get('helpfulness_rating', 5),
+            clarity_rating=serializer.validated_data.get('clarity_rating', 5),
+            comment=serializer.validated_data.get('comment', ''),
+            tags=serializer.validated_data.get('tags', []),
+        )
+
+        # Record in immutable audit trail
+        AuditRecord.objects.create(
+            request=service_request,
+            actor=request.user,
+            action=AuditRecord.Action.FEEDBACK_SUBMITTED,
+            description=f'Student submitted {feedback_obj.rating}★ CSAT rating and review.',
+            metadata_json={'rating': feedback_obj.rating, 'tags': feedback_obj.tags},
+            is_student_visible=True,
+        )
+
+        # Notify assigned staff
+        NotificationService().notify_feedback_received(service_request, feedback_obj)
+
+        return Response({
+            'success': True,
+            'data': RequestFeedbackSerializer(feedback_obj).data,
+            'message': 'Thank you! Your feedback has been recorded.'
+        }, status=status.HTTP_201_CREATED)
+
+    @action(detail=True, methods=['post'], url_path='appeal')
+    def appeal(self, request, pk=None):
+        """
+        POST /api/v1/requests/{id}/appeal/ — student submits clarification or appeal on rejected request
+        """
+        service_request = self._get_own_request(request, pk)
+        if service_request is None:
+            return self._not_found()
+
+        if service_request.status != ServiceRequest.Status.REJECTED:
+            return Response({
+                'success': False,
+                'data': None,
+                'error': {
+                    'code': 'APPEAL_NOT_ALLOWED',
+                    'message': 'Only rejected requests can be appealed.',
+                    'details': None,
+                }
+            }, status=status.HTTP_400_BAD_REQUEST)
+
+        appeal_reason = request.data.get('reason', '').strip()
+        if not appeal_reason:
+            return Response({
+                'success': False,
+                'data': None,
+                'error': {
+                    'code': 'REASON_REQUIRED',
+                    'message': 'Please provide an explanation or reason for your appeal.',
+                    'details': None,
+                }
+            }, status=status.HTTP_400_BAD_REQUEST)
+
+        # Add comment and audit record
+        Comment.objects.create(
+            request=service_request,
+            author=request.user,
+            body=f'[FORMAL APPEAL] {appeal_reason}',
+            is_internal=False,
+        )
+
+        AuditRecord.objects.create(
+            request=service_request,
+            actor=request.user,
+            action=AuditRecord.Action.STATUS_CHANGED,
+            description=f'Student lodged a formal appeal: "{appeal_reason[:80]}..."',
+            metadata_json={'appeal_reason': appeal_reason},
+            is_student_visible=True,
+        )
+
+        return Response({
+            'success': True,
+            'message': 'Your appeal has been lodged and sent to the department supervisor for review.'
+        })
+
     # ── Private helpers ─────────────────────────────────────
+
 
     def _get_own_request(self, request, pk):
         try:

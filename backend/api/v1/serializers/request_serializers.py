@@ -13,7 +13,7 @@ NotificationSerializer:   GET /api/v1/notifications/
 from rest_framework import serializers
 from django.utils import timezone
 
-from apps.requests.models import ServiceRequest, RequestStageHistory
+from apps.requests.models import ServiceRequest, RequestStageHistory, RequestFeedback
 from apps.services.models import ServiceCategory, ServiceArea, DynamicFieldSchema
 from apps.workflows.models import WorkflowStage
 from apps.audit.models import AuditRecord
@@ -22,6 +22,9 @@ from apps.attachments.models import Attachment
 from apps.notifications.models import Notification
 from apps.accounts.serializers import UserMeSerializer
 from core.sla_engine import SLAEngine
+from core.predictive_engine import PredictiveEngine
+from core.erp_service import ERPIntegrationService
+
 
 
 # ── Service Area & Category ─────────────────────────────────
@@ -254,10 +257,31 @@ class RequestListSerializer(serializers.ModelSerializer):
             return {'score': 100, 'status': 'healthy', 'summary': 'On track', 'penalties': []}
 
 
+# ── Request Feedback (CSAT) ─────────────────────────────────
+
+class RequestFeedbackSerializer(serializers.ModelSerializer):
+    student_name = serializers.CharField(source='student.full_name', read_only=True)
+    reference_number = serializers.CharField(source='request.reference_number', read_only=True)
+
+    class Meta:
+        model = RequestFeedback
+        fields = [
+            'id', 'rating', 'speed_rating', 'helpfulness_rating',
+            'clarity_rating', 'comment', 'tags', 'student_name',
+            'reference_number', 'created_at'
+        ]
+        read_only_fields = ['id', 'student_name', 'reference_number', 'created_at']
+
+    def validate_rating(self, value):
+        if not (1 <= value <= 5):
+            raise serializers.ValidationError('Rating must be between 1 and 5.')
+        return value
+
+
 # ── Service Request — Detail ────────────────────────────────
 
 class RequestDetailSerializer(serializers.ModelSerializer):
-    """Full request detail — includes all related data, responsibility ledger, and health diagnostics."""
+    """Full request detail — includes all related data, responsibility ledger, health diagnostics, predictive ETA, and ERP verification."""
     service_category = ServiceCategoryListSerializer(read_only=True)
     current_stage = WorkflowStageSerializer(read_only=True)
     student = UserMeSerializer(read_only=True)
@@ -270,6 +294,10 @@ class RequestDetailSerializer(serializers.ModelSerializer):
     risk = serializers.SerializerMethodField()
     health = serializers.SerializerMethodField()
     responsibility_ledger = serializers.SerializerMethodField()
+    feedback = serializers.SerializerMethodField()
+    predictive_forecast = serializers.SerializerMethodField()
+    erp_verification = serializers.SerializerMethodField()
+    verification_digest = serializers.SerializerMethodField()
 
     class Meta:
         model = ServiceRequest
@@ -278,6 +306,7 @@ class RequestDetailSerializer(serializers.ModelSerializer):
             'dynamic_fields_data', 'service_category', 'current_stage', 'student',
             'stage_history', 'audit_records', 'comments', 'attachments',
             'allowed_transitions', 'sla', 'risk', 'health', 'responsibility_ledger',
+            'feedback', 'predictive_forecast', 'erp_verification', 'verification_digest',
             'created_at', 'updated_at', 'resolved_at'
         ]
 
@@ -332,6 +361,32 @@ class RequestDetailSerializer(serializers.ModelSerializer):
         except Exception:
             return {}
 
+    def get_feedback(self, obj):
+        try:
+            if hasattr(obj, 'feedback'):
+                return RequestFeedbackSerializer(obj.feedback).data
+        except Exception:
+            pass
+        return None
+
+    def get_predictive_forecast(self, obj):
+        try:
+            return PredictiveEngine.predict_request_completion(obj)
+        except Exception:
+            return None
+
+    def get_erp_verification(self, obj):
+        try:
+            return ERPIntegrationService.get_student_erp_profile(obj.student)
+        except Exception:
+            return None
+
+    def get_verification_digest(self, obj):
+        try:
+            return ERPIntegrationService.generate_verification_digest(obj)
+        except Exception:
+            return None
+
 
 # ── Notifications ───────────────────────────────────────────
 
@@ -342,9 +397,10 @@ class NotificationSerializer(serializers.ModelSerializer):
         model = Notification
         fields = [
             'id', 'notification_type', 'title', 'message',
-            'is_read', 'created_at', 'request_reference'
+            'is_read', 'delivery_channels', 'created_at', 'request_reference'
         ]
-        read_only_fields = ['id', 'notification_type', 'title', 'message', 'created_at']
+        read_only_fields = ['id', 'notification_type', 'title', 'message', 'delivery_channels', 'created_at']
 
     def get_request_reference(self, obj):
         return obj.request.reference_number if obj.request else None
+

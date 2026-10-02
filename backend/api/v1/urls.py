@@ -29,7 +29,8 @@ from .staff_views import (
 from .admin_views import (
     AdminDashboardView, DepartmentHealthView,
     BottleneckAnalysisView, TrendsView, AdminRequestListView,
-    AdminInsightsView,
+    AdminInsightsView, AdminPredictiveForecastView, StudentERPProfileView,
+    NotificationDispatchLogsView, AdminCSVExportView, AdminCSATAnalyticsView,
 )
 
 # ── Student Request routes (manual — ViewSet without router) ────────────────
@@ -46,6 +47,13 @@ student_comments = StudentRequestViewSet.as_view({
 })
 student_attachments = StudentRequestViewSet.as_view({
     'post': 'attachments',
+})
+student_feedback = StudentRequestViewSet.as_view({
+    'get': 'feedback',
+    'post': 'feedback',
+})
+student_appeal = StudentRequestViewSet.as_view({
+    'post': 'appeal',
 })
 
 # ── Staff Queue routes ──────────────────────────────────────────────────────
@@ -64,6 +72,8 @@ urlpatterns = [
     path('requests/<uuid:pk>/', student_request_detail, name='student-request-detail'),
     path('requests/<uuid:pk>/comments/', student_comments, name='student-request-comments'),
     path('requests/<uuid:pk>/attachments/', student_attachments, name='student-request-attachments'),
+    path('requests/<uuid:pk>/feedback/', student_feedback, name='student-request-feedback'),
+    path('requests/<uuid:pk>/appeal/', student_appeal, name='student-request-appeal'),
 
     # Staff queue endpoints
     path('staff/queue/', staff_queue_list, name='staff-queue-list'),
@@ -77,10 +87,14 @@ urlpatterns = [
     path('service-categories/', ServiceCategoryListView.as_view(), name='service-category-list'),
     path('service-categories/<uuid:pk>/', ServiceCategoryDetailView.as_view(), name='service-category-detail'),
 
-    # Notifications (60s polling, Q3)
+    # Notifications & Multi-Channel Dispatch Logs
     path('notifications/', NotificationListView.as_view(), name='notification-list'),
     path('notifications/count/', NotificationCountView.as_view(), name='notification-count'),
     path('notifications/mark-read/', NotificationMarkReadView.as_view(), name='notification-mark-read'),
+    path('notifications/dispatch-logs/', NotificationDispatchLogsView.as_view(), name='notification-dispatch-logs'),
+
+    # ERP / SIS Academic Verification
+    path('erp/profile/', StudentERPProfileView.as_view(), name='erp-profile'),
 
     # Admin analytics dashboard
     path('admin/dashboard/', AdminDashboardView.as_view(), name='admin-dashboard'),
@@ -89,4 +103,8 @@ urlpatterns = [
     path('admin/trends/', TrendsView.as_view(), name='admin-trends'),
     path('admin/requests/', AdminRequestListView.as_view(), name='admin-request-list'),
     path('admin/insights/', AdminInsightsView.as_view(), name='admin-insights'),
+    path('admin/predictive-forecast/', AdminPredictiveForecastView.as_view(), name='admin-predictive-forecast'),
+    path('admin/export/csv/', AdminCSVExportView.as_view(), name='admin-csv-export'),
+    path('admin/csat-analytics/', AdminCSATAnalyticsView.as_view(), name='admin-csat-analytics'),
 ]
+
