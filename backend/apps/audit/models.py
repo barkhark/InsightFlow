@@ -44,6 +44,7 @@ class AuditRecord(models.Model):
         CANCELLED = 'CANCELLED', 'Cancelled'
         RESOLVED = 'RESOLVED', 'Resolved'
         SLA_BREACHED = 'SLA_BREACHED', 'SLA Breached'
+        FEEDBACK_SUBMITTED = 'FEEDBACK_SUBMITTED', 'Feedback Submitted'
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     request = models.ForeignKey(
