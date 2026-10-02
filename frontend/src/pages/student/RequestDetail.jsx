@@ -5,8 +5,12 @@ import {
   ArrowLeft, Paperclip, Send, Download, AlertTriangle, Clock, CheckCircle2,
   FileText, Building2, User, ShieldCheck, Activity, Info, ChevronRight,
   TrendingDown, Zap, MessageSquare, XCircle, Copy, Check, Lock, Globe,
-  Printer, ShieldAlert, Sparkles,
+  Printer, ShieldAlert, Sparkles, Star, Award, RotateCcw,
 } from 'lucide-react';
+import { FeedbackRatingModal } from '../../components/common/FeedbackRatingModal';
+import { PrintableSlipModal } from '../../components/common/PrintableSlipModal';
+import { PredictiveForecastWidget } from '../../components/common/PredictiveForecastWidget';
+
 
 /* ── Helpers ──────────────────────────────────────────────── */
 const STATUS_META = {
@@ -136,6 +140,13 @@ export const RequestDetail = () => {
   const [uploadingAttachment, setUploadingAttachment] = useState(false);
   const [activeTab, setActiveTab] = useState('overview');
 
+  // New interactive feature states
+  const [showSlipModal, setShowSlipModal] = useState(false);
+  const [showFeedbackModal, setShowFeedbackModal] = useState(false);
+  const [showAppealModal, setShowAppealModal] = useState(false);
+  const [appealReason, setAppealReason] = useState('');
+  const [submittingAppeal, setSubmittingAppeal] = useState(false);
+
   useEffect(() => { fetchDetail(); }, [id]);
 
   const fetchDetail = async () => {
@@ -182,6 +193,24 @@ export const RequestDetail = () => {
     }
   };
 
+  const handleAppealSubmit = async (e) => {
+    e.preventDefault();
+    if (!appealReason.trim()) return;
+    setSubmittingAppeal(true);
+    try {
+      await requestsApi.submitAppeal(id, appealReason.trim());
+      setShowAppealModal(false);
+      setAppealReason('');
+      await fetchDetail();
+      alert('Your appeal has been successfully submitted to the Department Supervisor.');
+    } catch (err) {
+      alert(err.response?.data?.error?.message || 'Failed to submit appeal.');
+    } finally {
+      setSubmittingAppeal(false);
+    }
+  };
+
+
   if (loading) return (
     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '60vh', flexDirection: 'column', gap: '1rem' }}>
       <div className="spinner" style={{ width: '32px', height: '32px', borderWidth: '3px' }} />
@@ -215,15 +244,70 @@ export const RequestDetail = () => {
           <button onClick={() => navigate(-1)} className="btn btn-ghost btn-sm">
             <ArrowLeft size={14} /> Back to Requests
           </button>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap' }}>
             <button className="btn btn-secondary btn-sm" onClick={handleCopyRef} title="Copy tracking reference">
               {copied ? <Check size={14} color="var(--success)" /> : <Copy size={14} />}
               <span>{copied ? 'Copied Reference!' : 'Copy Ref'}</span>
             </button>
-            <button className="btn btn-secondary btn-sm" onClick={() => window.print()} title="Print receipt">
+            <button
+              className="btn btn-secondary btn-sm"
+              onClick={() => setShowSlipModal(true)}
+              title="Official Institutional Slip"
+              style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}
+            >
               <Printer size={14} />
-              <span>Print</span>
+              <span>Official Slip & Certificate</span>
             </button>
+
+            {/* CSAT Rating Trigger */}
+            {(request.status === 'resolved' || request.status === 'closed') && (
+              request.feedback ? (
+                <div
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '4px',
+                    padding: '4px 10px',
+                    borderRadius: 'var(--radius-sm)',
+                    backgroundColor: 'rgba(245, 158, 11, 0.1)',
+                    border: '1px solid rgba(245, 158, 11, 0.3)',
+                    color: '#b45309',
+                    fontSize: '0.8rem',
+                    fontWeight: 700,
+                  }}
+                >
+                  <Star size={13} fill="#f59e0b" color="#f59e0b" />
+                  <span>Rated {request.feedback.rating}★</span>
+                </div>
+              ) : (
+                <button
+                  className="btn btn-primary btn-sm"
+                  onClick={() => setShowFeedbackModal(true)}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '0.4rem',
+                    boxShadow: '0 0 12px rgba(245, 158, 11, 0.35)',
+                    backgroundColor: '#1a4a8a',
+                  }}
+                >
+                  <Star size={14} fill="#f59e0b" color="#f59e0b" />
+                  <span>Rate Experience</span>
+                </button>
+              )
+            )}
+
+            {/* Appeal Rejection Trigger */}
+            {request.status === 'rejected' && (
+              <button
+                className="btn btn-danger btn-sm"
+                onClick={() => setShowAppealModal(true)}
+                style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}
+              >
+                <RotateCcw size={14} />
+                <span>Submit Formal Appeal</span>
+              </button>
+            )}
           </div>
         </div>
 
@@ -295,7 +379,17 @@ export const RequestDetail = () => {
             />
           </div>
         </div>
+
+        {/* Predictive Intelligence & Campus ERP Widget */}
+        <div style={{ marginTop: '1.25rem' }}>
+          <PredictiveForecastWidget
+            forecast={request.predictive_forecast}
+            erpProfile={request.erp_verification}
+            isTerminal={isTerminal}
+          />
+        </div>
       </div>
+
 
       {/* ── Main Workspace Grid ────────────────────────────── */}
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 340px', gap: '1.25rem', alignItems: 'start' }}>
@@ -604,8 +698,146 @@ export const RequestDetail = () => {
             </div>
           )}
 
+          {/* Verified Student Feedback Card */}
+          {request.feedback && (
+            <div className="card" style={{ borderLeft: '4px solid #f59e0b' }}>
+              <div className="label-text" style={{ marginBottom: '0.5rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                  <Award size={13} color="#f59e0b" /> Verified CSAT Rating
+                </span>
+                <span style={{ color: '#f59e0b', fontWeight: 800 }}>{request.feedback.rating}★ / 5.0</span>
+              </div>
+              <div style={{ display: 'flex', gap: '3px', marginBottom: '0.5rem' }}>
+                {[1, 2, 3, 4, 5].map((s) => (
+                  <Star
+                    key={s}
+                    size={15}
+                    fill={s <= request.feedback.rating ? '#f59e0b' : 'none'}
+                    color={s <= request.feedback.rating ? '#f59e0b' : '#cbd5e1'}
+                  />
+                ))}
+              </div>
+              {request.feedback.comment && (
+                <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', fontStyle: 'italic', marginBottom: '0.5rem' }}>
+                  "{request.feedback.comment}"
+                </p>
+              )}
+              {request.feedback.tags?.length > 0 && (
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px' }}>
+                  {request.feedback.tags.map((t) => (
+                    <span
+                      key={t}
+                      style={{
+                        fontSize: '0.68rem',
+                        padding: '2px 6px',
+                        borderRadius: '4px',
+                        backgroundColor: 'rgba(245, 158, 11, 0.1)',
+                        color: '#b45309',
+                        fontWeight: 600,
+                      }}
+                    >
+                      {t}
+                    </span>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
+
         </div>
       </div>
+
+      {/* Printable Official Slip & Audit Certificate Modal */}
+      <PrintableSlipModal
+        request={request}
+        isOpen={showSlipModal}
+        onClose={() => setShowSlipModal(false)}
+      />
+
+      {/* Feedback CSAT Modal */}
+      <FeedbackRatingModal
+        request={request}
+        isOpen={showFeedbackModal}
+        onClose={() => setShowFeedbackModal(false)}
+        onFeedbackSubmitted={(fb) => {
+          setRequest((prev) => ({ ...prev, feedback: fb }));
+        }}
+      />
+
+      {/* Formal Appeal Modal */}
+      {showAppealModal && (
+        <div
+          style={{
+            position: 'fixed',
+            inset: 0,
+            backgroundColor: 'rgba(10, 25, 45, 0.7)',
+            backdropFilter: 'blur(4px)',
+            zIndex: 1050,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: '1.5rem',
+          }}
+          onClick={() => setShowAppealModal(false)}
+        >
+          <div
+            style={{
+              backgroundColor: 'var(--bg-card, #ffffff)',
+              borderRadius: '12px',
+              width: '100%',
+              maxWidth: '500px',
+              padding: '1.5rem',
+              boxShadow: 'var(--shadow-xl)',
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <h3 style={{ margin: '0 0 0.5rem', color: 'var(--text-primary)' }}>
+              Lodge Formal Rejection Appeal
+            </h3>
+            <p style={{ margin: '0 0 1rem', fontSize: '0.82rem', color: 'var(--text-muted)' }}>
+              If your request was rejected due to missing documentation or misunderstanding, explain your clarification below. This will be routed to the Department Supervisor.
+            </p>
+            <form onSubmit={handleAppealSubmit}>
+              <textarea
+                rows={4}
+                required
+                value={appealReason}
+                onChange={(e) => setAppealReason(e.target.value)}
+                placeholder="Explain the grounds for your appeal..."
+                style={{
+                  width: '100%',
+                  padding: '0.75rem',
+                  borderRadius: '8px',
+                  border: '1px solid var(--border-input)',
+                  backgroundColor: 'var(--bg-input)',
+                  color: 'var(--text-primary)',
+                  fontSize: '0.85rem',
+                  fontFamily: 'inherit',
+                  boxSizing: 'border-box',
+                  marginBottom: '1rem',
+                }}
+              />
+              <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.5rem' }}>
+                <button
+                  type="button"
+                  className="btn btn-secondary btn-sm"
+                  onClick={() => setShowAppealModal(false)}
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="btn btn-danger btn-sm"
+                  disabled={submittingAppeal || !appealReason.trim()}
+                >
+                  {submittingAppeal ? 'Submitting...' : 'Submit Formal Appeal'}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
+
