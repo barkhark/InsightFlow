@@ -5,7 +5,11 @@ import {
   ArrowLeft, ArrowRightCircle, XCircle, CheckCircle, MessageSquare,
   Send, Lock, Globe, Paperclip, Clock, ShieldAlert, FileText,
   Activity, ShieldCheck, User, Building2, Zap, AlertTriangle, Download,
+  Printer, Star, Award,
 } from 'lucide-react';
+import { PrintableSlipModal } from '../../components/common/PrintableSlipModal';
+import { PredictiveForecastWidget } from '../../components/common/PredictiveForecastWidget';
+
 
 /* ── Helpers ──────────────────────────────────────────────── */
 const STATUS_META = {
@@ -75,6 +79,8 @@ export const StaffProcessRequest = () => {
   const [isInternalComment, setIsInternalComment] = useState(false);
   const [postingComment, setPostingComment] = useState(false);
   const [activeTab, setActiveTab] = useState('overview');
+  const [showSlipModal, setShowSlipModal] = useState(false);
+
 
   useEffect(() => {
     fetchDetail();
@@ -204,36 +210,57 @@ export const StaffProcessRequest = () => {
             </p>
           </div>
 
-          {/* Action Trigger Button */}
-          {!isTerminal && allowedTransitions.length > 0 && (
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.625rem', flexWrap: 'wrap' }}>
             <button
-              onClick={() => {
-                setSelectedTargetStage(allowedTransitions[0]?.id || '');
-                setShowTransitionModal(true);
-              }}
-              className="btn btn-primary"
-              style={{ padding: '0.625rem 1.25rem' }}
+              onClick={() => setShowSlipModal(true)}
+              className="btn btn-secondary btn-sm"
+              style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}
             >
-              <ArrowRightCircle size={17} />
-              <span>Advance Workflow Stage ({allowedTransitions.length})</span>
+              <Printer size={14} />
+              <span>Official Slip & Certificate</span>
             </button>
-          )}
 
-          {isTerminal && (
-            <div style={{
-              display: 'flex', alignItems: 'center', gap: '0.5rem',
-              padding: '0.5rem 0.875rem', borderRadius: 'var(--radius-md)',
-              background: request.status === 'resolved' ? 'var(--success-bg)' : 'var(--danger-bg)',
-              color: request.status === 'resolved' ? 'var(--success)' : 'var(--danger)',
-              border: `1px solid ${request.status === 'resolved' ? 'var(--success-border)' : 'var(--danger-border)'}`,
-              fontSize: '0.8rem', fontWeight: 700,
-            }}>
-              {request.status === 'resolved' ? <CheckCircle size={16} /> : <XCircle size={16} />}
-              Terminal Stage: {request.current_stage?.name}
-            </div>
-          )}
+            {/* Action Trigger Button */}
+            {!isTerminal && allowedTransitions.length > 0 && (
+              <button
+                onClick={() => {
+                  setSelectedTargetStage(allowedTransitions[0]?.id || '');
+                  setShowTransitionModal(true);
+                }}
+                className="btn btn-primary"
+                style={{ padding: '0.625rem 1.25rem' }}
+              >
+                <ArrowRightCircle size={17} />
+                <span>Advance Workflow Stage ({allowedTransitions.length})</span>
+              </button>
+            )}
+
+            {isTerminal && (
+              <div style={{
+                display: 'flex', alignItems: 'center', gap: '0.5rem',
+                padding: '0.5rem 0.875rem', borderRadius: 'var(--radius-md)',
+                background: request.status === 'resolved' ? 'var(--success-bg)' : 'var(--danger-bg)',
+                color: request.status === 'resolved' ? 'var(--success)' : 'var(--danger)',
+                border: `1px solid ${request.status === 'resolved' ? 'var(--success-border)' : 'var(--danger-border)'}`,
+                fontSize: '0.8rem', fontWeight: 700,
+              }}>
+                {request.status === 'resolved' ? <CheckCircle size={16} /> : <XCircle size={16} />}
+                Terminal Stage: {request.current_stage?.name}
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Predictive Intelligence & Campus ERP Widget */}
+        <div style={{ marginTop: '1rem' }}>
+          <PredictiveForecastWidget
+            forecast={request.predictive_forecast}
+            erpProfile={request.erp_verification}
+            isTerminal={isTerminal}
+          />
         </div>
       </div>
+
 
       {/* ── Workflow Stepper ───────────────────────────────── */}
       <div className="card" style={{ marginBottom: '1.25rem', padding: '1.25rem 1.5rem' }}>
@@ -490,8 +517,56 @@ export const StaffProcessRequest = () => {
               </p>
             </div>
           )}
+
+          {/* Student Satisfaction Feedback Review Card */}
+          {request.feedback && (
+            <div className="card" style={{ borderLeft: '4px solid #f59e0b' }}>
+              <div className="label-text" style={{ marginBottom: '0.5rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                  <Award size={13} color="#f59e0b" /> Student CSAT Rating
+                </span>
+                <span style={{ color: '#f59e0b', fontWeight: 800 }}>{request.feedback.rating}★ / 5.0</span>
+              </div>
+              <div style={{ display: 'flex', gap: '3px', marginBottom: '0.5rem' }}>
+                {[1, 2, 3, 4, 5].map((s) => (
+                  <Star
+                    key={s}
+                    size={14}
+                    fill={s <= request.feedback.rating ? '#f59e0b' : 'none'}
+                    color={s <= request.feedback.rating ? '#f59e0b' : '#cbd5e1'}
+                  />
+                ))}
+              </div>
+              {request.feedback.comment && (
+                <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', fontStyle: 'italic', marginBottom: '0.5rem' }}>
+                  "{request.feedback.comment}"
+                </p>
+              )}
+              {request.feedback.tags?.length > 0 && (
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px' }}>
+                  {request.feedback.tags.map((t) => (
+                    <span
+                      key={t}
+                      style={{
+                        fontSize: '0.68rem',
+                        padding: '2px 6px',
+                        borderRadius: '4px',
+                        backgroundColor: 'rgba(245, 158, 11, 0.1)',
+                        color: '#b45309',
+                        fontWeight: 600,
+                      }}
+                    >
+                      {t}
+                    </span>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
+
         </div>
       </div>
+
 
       {/* ── Transition Modal (Decision Q2) ─────────────────── */}
       {showTransitionModal && (
@@ -656,6 +731,14 @@ export const StaffProcessRequest = () => {
         </div>
       )}
 
+      {/* Printable Official Slip & Audit Certificate Modal */}
+      <PrintableSlipModal
+        request={request}
+        isOpen={showSlipModal}
+        onClose={() => setShowSlipModal(false)}
+      />
+
     </div>
   );
 };
+
