@@ -30,4 +30,35 @@ export const adminApi = {
     const response = await apiClient.get('/admin/insights/', { params: { days } });
     return response.data;
   },
+
+  getPredictiveForecast: async () => {
+    const response = await apiClient.get('/admin/predictive-forecast/');
+    return response.data;
+  },
+
+  getCSATAnalytics: async (days = 90) => {
+    const response = await apiClient.get('/admin/csat-analytics/', { params: { days } });
+    return response.data;
+  },
+
+  downloadCSVExport: async (filters = {}) => {
+    const response = await apiClient.get('/admin/export/csv/', {
+      params: filters,
+      responseType: 'blob',
+    });
+    const url = window.URL.createObjectURL(new Blob([response.data]));
+    const link = document.createElement('a');
+    link.href = url;
+    const disposition = response.headers['content-disposition'];
+    const filename = disposition
+      ? disposition.split('filename=')[1]?.replace(/"/g, '')
+      : `insightflow_export_${new Date().toISOString().slice(0, 10)}.csv`;
+    link.setAttribute('download', filename);
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    window.URL.revokeObjectURL(url);
+  },
 };
+
+

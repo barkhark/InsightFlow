@@ -3,7 +3,7 @@ import { NavLink } from 'react-router-dom';
 import {
   Inbox, PlusCircle, BarChart3, Activity,
   AlertTriangle, FileSpreadsheet, Settings, ExternalLink, ChevronRight,
-  TrendingUp,
+  TrendingUp, Download,
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 
@@ -40,6 +40,7 @@ export const Sidebar = () => {
       { to: '/admin/bottlenecks',       label: 'Bottleneck Analysis',  icon: AlertTriangle,   iconColor: '#f0c87a' },
       { to: '/admin/trends',            label: 'Trends & Volume',      icon: TrendingUp,      iconColor: '#a8e0b0' },
       { to: '/admin/all-requests',      label: 'All Requests Ledger',  icon: FileSpreadsheet, iconColor: '#a8b8d8' },
+      { to: '/admin/reports',           label: 'Reports & Export',     icon: Download,        iconColor: '#c4a0e8' },
     ];
     return [];
   };

@@ -73,4 +73,30 @@ export const requestsApi = {
     });
     return response.data;
   },
+
+  // CSAT Feedback
+  submitFeedback: async (requestId, payload) => {
+    const response = await apiClient.post(`/requests/${requestId}/feedback/`, payload);
+    return response.data;
+  },
+
+  getFeedback: async (requestId) => {
+    const response = await apiClient.get(`/requests/${requestId}/feedback/`);
+    return response.data;
+  },
+
+  // Appeal on rejection
+  submitAppeal: async (requestId, reason) => {
+    const response = await apiClient.post(`/requests/${requestId}/appeal/`, { reason });
+    return response.data;
+  },
+
+  // Campus ERP / SIS profile
+  getERPProfile: async (studentId = null) => {
+    const response = await apiClient.get('/erp/profile/', {
+      params: studentId ? { student_id: studentId } : {},
+    });
+    return response.data;
+  },
 };
+

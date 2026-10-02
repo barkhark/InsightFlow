@@ -21,6 +21,7 @@ import { AdminDepartmentHealth } from './pages/admin/AdminDepartmentHealth';
 import { AdminBottlenecks } from './pages/admin/AdminBottlenecks';
 import { AdminAllRequests } from './pages/admin/AdminAllRequests';
 import { AdminTrends } from './pages/admin/AdminTrends';
+import { AdminReports } from './pages/admin/AdminReports';
 
 // Route Guard Component
 const ProtectedRoute = ({ allowedRoles = [], children }) => {
@@ -172,6 +173,14 @@ function App() {
                 element={
                   <ProtectedRoute allowedRoles={['admin']}>
                     <AdminTrends />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/admin/reports"
+                element={
+                  <ProtectedRoute allowedRoles={['admin']}>
+                    <AdminReports />
                   </ProtectedRoute>
                 }
               />

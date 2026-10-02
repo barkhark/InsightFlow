@@ -15,4 +15,10 @@ export const notificationsApi = {
     const response = await apiClient.post('/notifications/mark-read/', { ids });
     return response.data;
   },
+
+  getDispatchLogs: async () => {
+    const response = await apiClient.get('/notifications/dispatch-logs/');
+    return response.data;
+  },
 };
+
