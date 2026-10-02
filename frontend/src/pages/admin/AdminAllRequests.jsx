@@ -39,6 +39,7 @@ export const AdminAllRequests = () => {
   const [priorityFilter, setPriorityFilter] = useState('');
   const [search, setSearch]               = useState('');
   const [searchInput, setSearchInput]     = useState('');
+  const [exporting, setExporting]         = useState(false);
   const navigate = useNavigate();
 
   const fetchRequests = useCallback(async () => {
@@ -62,6 +63,22 @@ export const AdminAllRequests = () => {
   const handleSearchSubmit = (e) => {
     e.preventDefault();
     setSearch(searchInput.trim());
+  };
+
+  const handleCSVExport = async () => {
+    setExporting(true);
+    try {
+      const filters = {};
+      if (statusFilter)   filters.status   = statusFilter;
+      if (priorityFilter) filters.priority = priorityFilter;
+      if (search)         filters.search   = search;
+      await adminApi.downloadCSVExport(filters);
+    } catch (err) {
+      console.error('CSV export failed', err);
+      alert('Export failed. Please try again.');
+    } finally {
+      setExporting(false);
+    }
   };
 
   const totalCount    = requests.length;
@@ -93,6 +110,15 @@ export const AdminAllRequests = () => {
             <button className="btn btn-secondary btn-sm" onClick={fetchRequests} disabled={loading}>
               <RefreshCw size={14} />
               <span>Refresh Ledger</span>
+            </button>
+            <button
+              className="btn btn-primary btn-sm"
+              onClick={handleCSVExport}
+              disabled={exporting}
+              style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}
+            >
+              <Download size={14} />
+              <span>{exporting ? 'Exporting…' : 'Export CSV'}</span>
             </button>
           </div>
         </div>

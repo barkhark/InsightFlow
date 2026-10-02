@@ -5,8 +5,11 @@ import {
   Activity, AlertTriangle, FileSpreadsheet, TrendingUp, CheckCircle2,
   Clock, ShieldCheck, Building2, Sparkles, ArrowRight, Zap,
   BarChart3, RefreshCw, Lightbulb, Target, TrendingDown, Users,
-  Check, ArrowUpRight, Flame, PieChart,
+  Check, ArrowUpRight, Flame, PieChart, Star, Award, Radio, Mail,
+  Download,
 } from 'lucide-react';
+import { MultiChannelDispatchModal } from '../../components/common/MultiChannelDispatchModal';
+
 
 /* ── KPI Card ──────────────────────────────────────────────── */
 const KPICard = ({ label, value, unit = '', icon: Icon, color, description, trend }) => (
@@ -241,6 +244,14 @@ export const AdminDashboard = () => {
           color={complianceColor}
           description="On-time stage transition adherence (30-day window)"
         />
+        <KPICard
+          label="CSAT Satisfaction"
+          value={kpis?.csat?.average_score ?? '—'}
+          unit=" / 5.0"
+          icon={Star}
+          color="#f59e0b"
+          description={`${kpis?.csat?.total_responses ?? 0} student ratings · ${kpis?.csat?.satisfaction_rate_pct ?? 0}% satisfied`}
+        />
       </div>
 
       {/* ── Navigation Module Cards ───────────────────────────── */}
@@ -265,6 +276,20 @@ export const AdminDashboard = () => {
           icon={FileSpreadsheet}
           color="var(--primary)"
           onClick={() => navigate('/admin/all-requests')}
+        />
+        <ModuleCard
+          title="Trends & Volume Analytics"
+          desc="Daily request intake volume visualization, trend indicators, and bottleneck forensics across configurable time windows."
+          icon={TrendingUp}
+          color="var(--success)"
+          onClick={() => navigate('/admin/trends')}
+        />
+        <ModuleCard
+          title="Reports & CSAT Analytics"
+          desc="Institutional satisfaction intelligence with NPS scoring, department-wise sentiment breakdown, feedback tag cloud, and one-click CSV data export."
+          icon={Download}
+          color="#8b5cf6"
+          onClick={() => navigate('/admin/reports')}
         />
       </div>
 
