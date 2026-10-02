@@ -27,6 +27,7 @@ class Notification(models.Model):
         REQUEST_REJECTED = 'REQUEST_REJECTED', 'Request Rejected'
         SLA_WARNING = 'SLA_WARNING', 'SLA Warning'
         SLA_BREACH = 'SLA_BREACH', 'SLA Breached'
+        FEEDBACK_RECEIVED = 'FEEDBACK_RECEIVED', 'Feedback Received'
         GENERAL = 'GENERAL', 'General'
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
@@ -50,6 +51,11 @@ class Notification(models.Model):
     title = models.CharField(max_length=150)
     message = models.TextField()
     is_read = models.BooleanField(default=False)
+    delivery_channels = models.JSONField(
+        default=dict,
+        blank=True,
+        help_text='Simulated multi-channel delivery audit: in_app, email, sms, erp.'
+    )
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
