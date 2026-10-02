@@ -34,3 +34,9 @@ Thumbs.db
 *.swp
 *.swo
 db.sqlite3
+
+# Project Reports & Documentation (Private / Academic Submission)
+docs/
+*.docx
+Project_Report*
+
