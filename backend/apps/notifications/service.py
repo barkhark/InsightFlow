@@ -7,9 +7,19 @@ Also called directly by comment/attachment views.
 
 Design: Every notification has a title (for the bell badge list)
 and a message (for the detail panel). Both are always human-readable.
+
+Email delivery uses Django's email backend:
+  - Development: console backend (prints to terminal)
+  - Production:  set EMAIL_BACKEND=django.core.mail.backends.smtp.EmailBackend
+                 and EMAIL_HOST/EMAIL_HOST_USER/EMAIL_HOST_PASSWORD in .env
 """
+import logging
 from django.utils import timezone
+from django.core.mail import send_mail
+from django.conf import settings
 from .models import Notification
+
+logger = logging.getLogger('insightflow')
 
 
 class NotificationService:
@@ -85,7 +95,7 @@ class NotificationService:
                 f'{new_stage.responsible_department.name}.'
             )
 
-        Notification.objects.create(
+        notification = Notification.objects.create(
             recipient=student,
             request=service_request,
             notification_type=n_type,
@@ -93,6 +103,7 @@ class NotificationService:
             message=message,
             delivery_channels=self._build_dispatch_channels(student, title, message, n_type),
         )
+        self._send_email(student, title, message)
 
     def notify_assignment(self, service_request, assigned_to, assigned_by):
         """Notify a staff member when a request is assigned to them."""
@@ -111,6 +122,7 @@ class NotificationService:
             message=message,
             delivery_channels=self._build_dispatch_channels(assigned_to, title, message, n_type),
         )
+        self._send_email(assigned_to, title, message)
 
     def notify_comment_added(self, comment):
         """
@@ -197,4 +209,31 @@ class NotificationService:
             message=message,
             delivery_channels=self._build_dispatch_channels(recipient, title, message, n_type),
         )
+        self._send_email(recipient, title, message)
 
+    @staticmethod
+    def _send_email(recipient, subject: str, body: str):
+        """
+        Dispatches a real email via Django's configured email backend.
+
+        Development (default): prints to console via ConsoleEmailBackend.
+        Production: set EMAIL_BACKEND=django.core.mail.backends.smtp.EmailBackend
+                    + EMAIL_HOST / EMAIL_HOST_USER / EMAIL_HOST_PASSWORD in .env
+                    No code changes required — just environment config.
+
+        Errors are caught and logged to avoid breaking the notification flow.
+        """
+        try:
+            send_mail(
+                subject=f'{settings.EMAIL_SUBJECT_PREFIX}{subject}',
+                message=body,
+                from_email=settings.DEFAULT_FROM_EMAIL,
+                recipient_list=[recipient.email],
+                fail_silently=False,
+            )
+        except Exception as exc:
+            # Log but never raise — email failure must NOT break the request lifecycle
+            logger.warning(
+                'Email dispatch failed for recipient %s: %s',
+                recipient.email, str(exc)
+            )
