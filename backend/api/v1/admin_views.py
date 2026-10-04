@@ -157,8 +157,8 @@ class DepartmentHealthView(APIView):
         engine = SLAEngine()
         results = [engine.department_sla_summary(dept, days=days) for dept in departments]
 
-        # Sort by compliance ascending (worst first — most actionable)
-        results.sort(key=lambda x: x['compliance_rate_pct'])
+        # Sort by compliance ascending (worst first — most actionable, None/no_data last)
+        results.sort(key=lambda x: (x['compliance_rate_pct'] is None, x['compliance_rate_pct'] if x['compliance_rate_pct'] is not None else 0))
 
         return Response({
             'success': True,
