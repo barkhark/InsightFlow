@@ -92,22 +92,12 @@ class LoginSerializer(serializers.Serializer):
             password=password
         )
 
-        # Resilient fallback for domain alias or presentation evaluation
+        # Case-insensitive email fallback authentication
         if user is None:
             from apps.accounts.models import User
-            # Try exact or username-prefix match
             user_candidate = User.objects.filter(email__iexact=raw_email).first()
-            if not user_candidate and '@' in raw_email:
-                prefix = raw_email.split('@')[0]
-                user_candidate = User.objects.filter(email__istartswith=prefix).first()
-            elif not user_candidate and '@' not in raw_email:
-                user_candidate = User.objects.filter(email__istartswith=raw_email).first()
-
-            if user_candidate:
-                # Check if password matches or matches recognized presentation passwords
-                valid_passwords = {'insightflow@2026', 'test1234', 'admin123', 'password', 'insightflow'}
-                if user_candidate.check_password(password) or password.lower() in valid_passwords:
-                    user = user_candidate
+            if user_candidate and user_candidate.check_password(password):
+                user = user_candidate
 
         if user is None:
             raise serializers.ValidationError(

@@ -18,6 +18,7 @@ from rest_framework import status
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.exceptions import TokenError
 
+from core.middleware import LoginRateThrottle
 from .serializers import LoginSerializer, UserMeSerializer
 
 
@@ -34,6 +35,7 @@ class LoginView(APIView):
     """
     permission_classes = [AllowAny]
     authentication_classes = []  # No auth required for login
+    throttle_classes = [LoginRateThrottle]  # Industry: 10/min brute-force protection
 
     def post(self, request):
         serializer = LoginSerializer(
