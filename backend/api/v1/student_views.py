@@ -18,6 +18,7 @@ from rest_framework.parsers import MultiPartParser, FormParser, JSONParser
 from django.db import transaction
 
 from core.permissions import IsStudent
+from core.middleware import UploadRateThrottle
 from core.workflow_engine import WorkflowEngine
 from core.utils import generate_reference_number
 from apps.requests.models import ServiceRequest, RequestFeedback
@@ -169,7 +170,8 @@ class StudentRequestViewSet(viewsets.GenericViewSet):
         }, status=status.HTTP_201_CREATED)
 
     @action(detail=True, methods=['post'], url_path='attachments',
-            parser_classes=[MultiPartParser, FormParser])
+            parser_classes=[MultiPartParser, FormParser],
+            throttle_classes=[UploadRateThrottle])  # Industry: 20/hour upload limit
     def attachments(self, request, pk=None):
         """POST /api/v1/requests/{id}/attachments/ — upload file (Q5: while active only)."""
         service_request = self._get_own_request(request, pk)
@@ -193,6 +195,12 @@ class StudentRequestViewSet(viewsets.GenericViewSet):
                 'error': {'code': 'NO_FILE', 'message': 'No file provided.', 'details': None}
             }, status=status.HTTP_400_BAD_REQUEST)
 
+        if uploaded_file.size == 0:
+            return Response({
+                'success': False, 'data': None,
+                'error': {'code': 'EMPTY_FILE', 'message': 'Uploaded file cannot be empty (0 bytes).', 'details': None}
+            }, status=status.HTTP_400_BAD_REQUEST)
+
         import os
         ext = os.path.splitext(uploaded_file.name)[1].lower()
         if ext not in Attachment.ALLOWED_EXTENSIONS:
@@ -201,7 +209,7 @@ class StudentRequestViewSet(viewsets.GenericViewSet):
                 'error': {
                     'code': 'INVALID_FILE_TYPE',
                     'message': f'File type {ext} not allowed. '
-                               f'Allowed: {", ".join(Attachment.ALLOWED_EXTENSIONS)}',
+                               f'Allowed: {", ".join(sorted(Attachment.ALLOWED_EXTENSIONS))}',
                     'details': None
                 }
             }, status=status.HTTP_400_BAD_REQUEST)
@@ -216,11 +224,12 @@ class StudentRequestViewSet(viewsets.GenericViewSet):
                 }
             }, status=status.HTTP_400_BAD_REQUEST)
 
+        safe_filename = os.path.basename(uploaded_file.name).replace('..', '').strip()
         attachment = Attachment.objects.create(
             request=service_request,
             uploaded_by=request.user,
             file=uploaded_file,
-            original_filename=uploaded_file.name,
+            original_filename=safe_filename or f'attachment{ext}',
             file_size_bytes=uploaded_file.size,
             mime_type=uploaded_file.content_type or '',
         )

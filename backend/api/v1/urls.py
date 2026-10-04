@@ -32,6 +32,8 @@ from .admin_views import (
     AdminInsightsView, AdminPredictiveForecastView, StudentERPProfileView,
     NotificationDispatchLogsView, AdminCSVExportView, AdminCSATAnalyticsView,
 )
+from .health_views import HealthCheckView
+from .attachment_views import AttachmentDownloadView
 
 # ── Student Request routes (manual — ViewSet without router) ────────────────
 student_request_list = StudentRequestViewSet.as_view({
@@ -106,5 +108,11 @@ urlpatterns = [
     path('admin/predictive-forecast/', AdminPredictiveForecastView.as_view(), name='admin-predictive-forecast'),
     path('admin/export/csv/', AdminCSVExportView.as_view(), name='admin-csv-export'),
     path('admin/csat-analytics/', AdminCSATAnalyticsView.as_view(), name='admin-csat-analytics'),
+
+    # Health Check Probe
+    path('health/', HealthCheckView.as_view(), name='health-check'),
+
+    # Controlled Secure Attachment Download
+    path('attachments/<uuid:pk>/download/', AttachmentDownloadView.as_view(), name='attachment-download'),
 ]
 

@@ -134,6 +134,17 @@ class StaffQueueViewSet(viewsets.GenericViewSet):
                 'error': {'code': 'NOT_FOUND', 'message': 'Request not found.', 'details': None}
             }, status=status.HTTP_404_NOT_FOUND)
 
+        dept = self._get_staff_department(request.user)
+        if dept and service_request.current_stage and service_request.current_stage.responsible_department_id != dept.id:
+            return Response({
+                'success': False, 'data': None,
+                'error': {
+                    'code': 'FORBIDDEN',
+                    'message': 'You do not have permission to manage requests outside your department.',
+                    'details': None
+                }
+            }, status=status.HTTP_403_FORBIDDEN)
+
         serializer = TransitionSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
 
@@ -164,11 +175,24 @@ class StaffQueueViewSet(viewsets.GenericViewSet):
     def comments(self, request, pk=None):
         """GET/POST /api/v1/staff/queue/{id}/comments/ — staff can post internal comments."""
         try:
-            service_request = ServiceRequest.objects.get(id=pk)
+            service_request = ServiceRequest.objects.select_related(
+                'current_stage__responsible_department'
+            ).get(id=pk)
         except ServiceRequest.DoesNotExist:
             return Response({'success': False, 'data': None,
                              'error': {'code': 'NOT_FOUND', 'message': 'Not found.', 'details': None}},
                             status=status.HTTP_404_NOT_FOUND)
+
+        dept = self._get_staff_department(request.user)
+        if dept and service_request.current_stage and service_request.current_stage.responsible_department_id != dept.id:
+            return Response({
+                'success': False, 'data': None,
+                'error': {
+                    'code': 'FORBIDDEN',
+                    'message': 'You do not have permission to access requests outside your department.',
+                    'details': None
+                }
+            }, status=status.HTTP_403_FORBIDDEN)
 
         if request.method == 'GET':
             qs = service_request.comments.filter(is_deleted=False)
@@ -196,11 +220,24 @@ class StaffQueueViewSet(viewsets.GenericViewSet):
         """POST /api/v1/staff/queue/{id}/assign/ — reassign to another staff member."""
         from apps.accounts.models import User
         try:
-            service_request = ServiceRequest.objects.get(id=pk)
+            service_request = ServiceRequest.objects.select_related(
+                'current_stage__responsible_department'
+            ).get(id=pk)
         except ServiceRequest.DoesNotExist:
             return Response({'success': False, 'data': None,
                              'error': {'code': 'NOT_FOUND', 'message': 'Not found.', 'details': None}},
                             status=status.HTTP_404_NOT_FOUND)
+
+        dept = self._get_staff_department(request.user)
+        if dept and service_request.current_stage and service_request.current_stage.responsible_department_id != dept.id:
+            return Response({
+                'success': False, 'data': None,
+                'error': {
+                    'code': 'FORBIDDEN',
+                    'message': 'You do not have permission to assign requests outside your department.',
+                    'details': None
+                }
+            }, status=status.HTTP_403_FORBIDDEN)
 
         assignee_id = request.data.get('assignee_id')
         try:
@@ -209,6 +246,19 @@ class StaffQueueViewSet(viewsets.GenericViewSet):
             return Response({'success': False, 'data': None,
                              'error': {'code': 'INVALID_ASSIGNEE', 'message': 'Staff member not found.', 'details': None}},
                             status=status.HTTP_400_BAD_REQUEST)
+
+        if dept:
+            try:
+                if assignee.staff_profile.department_id != dept.id:
+                    return Response({
+                        'success': False, 'data': None,
+                        'error': {'code': 'INVALID_ASSIGNEE', 'message': 'Staff member must belong to your department.', 'details': None}
+                    }, status=status.HTTP_400_BAD_REQUEST)
+            except Exception:
+                return Response({
+                    'success': False, 'data': None,
+                    'error': {'code': 'INVALID_ASSIGNEE', 'message': 'Staff member has no department assigned.', 'details': None}
+                }, status=status.HTTP_400_BAD_REQUEST)
 
         # Close current assignment
         Assignment.objects.filter(request=service_request, is_current=True).update(is_current=False)

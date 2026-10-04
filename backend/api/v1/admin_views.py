@@ -72,7 +72,7 @@ class AdminDashboardView(APIView):
         # CSAT Analytics
         feedbacks = RequestFeedback.objects.all()
         csat_count = feedbacks.count()
-        avg_rating = round(feedbacks.aggregate(avg=Avg('rating'))['avg'] or 4.8, 1)
+        avg_rating = round(feedbacks.aggregate(avg=Avg('rating'))['avg'] or 0.0, 1)
 
         distribution = {
             '5_star': feedbacks.filter(rating=5).count(),
