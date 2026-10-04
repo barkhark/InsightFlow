@@ -47,9 +47,12 @@ def api_root(request):
     </html>
     """)
 
+from api.v1.health_views import HealthCheckView
+
 urlpatterns = [
     path('', api_root, name='api-root-landing'),
     path('admin/', admin.site.urls),
+    path('api/health/', HealthCheckView.as_view(), name='health-check-root'),
     path('api/v1/', include('api.v1.urls')),
 ]
 

@@ -12,6 +12,12 @@ python-decouple==3.8
 # File handling (Phase 4 — Attachments)
 Pillow==10.4.0
 
+# Industry: Production WSGI server (replaces dev runserver)
+gunicorn==21.2.0
+
+# Industry: PostgreSQL driver (activated via DB_ENGINE env var)
+psycopg2-binary==2.9.9
+
 # Testing
 pytest==8.3.3
 pytest-django==4.9.0
