@@ -35,8 +35,18 @@ Thumbs.db
 *.swo
 db.sqlite3
 
+# Media & Uploads
+media/
+backend/media/
+
 # Project Reports & Documentation (Private / Academic Submission)
 docs/
 *.docx
 Project_Report*
+
+# Temp / Screenshot Scripts (not part of project)
+frontend/capture_screens.mjs
+frontend/patch_screens.mjs
+frontend/take_screenshots.js
+backend/get_ids.py
 
