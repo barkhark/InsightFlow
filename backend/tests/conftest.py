@@ -174,3 +174,60 @@ def auth_admin(api_client, admin_user):
     """API client force-authenticated as an admin."""
     api_client.force_authenticate(user=admin_user)
     return api_client
+
+
+# ── Workflow & Service Setup ────────────────────────────────
+
+@pytest.fixture
+def api_setup(db, department):
+    """Full workflow + category setup for API integration testing."""
+    from apps.workflows.models import WorkflowDefinition, WorkflowStage, SLAConfiguration
+    from apps.services.models import ServiceArea, ServiceCategory, DynamicFieldSchema
+
+    wf = WorkflowDefinition.objects.create(name='Test Workflow', is_active=True)
+    s1 = WorkflowStage.objects.create(
+        workflow=wf, name='Initial Stage', code='INITIAL', order=1,
+        responsible_department=department, is_initial=True,
+    )
+    s2 = WorkflowStage.objects.create(
+        workflow=wf, name='Review Stage', code='REVIEW', order=2,
+        responsible_department=department,
+    )
+    s3 = WorkflowStage.objects.create(
+        workflow=wf, name='Resolved Stage', code='RESOLVED', order=3,
+        responsible_department=department, is_terminal=True,
+    )
+    s4 = WorkflowStage.objects.create(
+        workflow=wf, name='Rejected Stage', code='REJECTED', order=4,
+        responsible_department=department, is_terminal=True, is_rejection=True,
+    )
+    s1.allowed_next_stages.set([s2])
+    s2.allowed_next_stages.set([s3, s4])
+
+    SLAConfiguration.objects.create(stage=s1, target_hours=4)
+    SLAConfiguration.objects.create(stage=s2, target_hours=8)
+
+    area = ServiceArea.objects.create(name='Academics', icon_key='graduation-cap', order=1)
+    category = ServiceCategory.objects.create(
+        service_area=area,
+        name='Grade Card Issue',
+        workflow=wf,
+        owning_department=department,
+        default_priority='medium',
+    )
+    field1 = DynamicFieldSchema.objects.create(
+        service_category=category,
+        field_key='semester_no',
+        field_label='Semester Number',
+        field_type='number',
+        is_required=True,
+        order=1,
+    )
+
+    return {
+        'workflow': wf,
+        'stages': {'initial': s1, 'review': s2, 'resolved': s3, 'rejected': s4},
+        'area': area,
+        'category': category,
+        'fields': [field1],
+    }
