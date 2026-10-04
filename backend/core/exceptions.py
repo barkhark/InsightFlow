@@ -27,8 +27,20 @@ def custom_exception_handler(exc, context):
     response = exception_handler(exc, context)
 
     if response is None:
-        # Unhandled exception — let Django handle it (500)
-        return response
+        # Unexpected server error (500) — log safely without leaking internals to client
+        import logging
+        logger = logging.getLogger('insightflow')
+        logger.exception("Unhandled server exception: %s", str(exc), exc_info=exc)
+        from rest_framework.response import Response
+        return Response({
+            'success': False,
+            'data': None,
+            'error': {
+                'code': 'INTERNAL_SERVER_ERROR',
+                'message': 'An unexpected server error occurred. Please contact the system administrator.',
+                'details': None,
+            }
+        }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     error_detail = response.data
     code = 'ERROR'
@@ -49,10 +61,20 @@ def custom_exception_handler(exc, context):
                 field: [str(e) for e in errors]
                 for field, errors in error_detail.items()
             }
-            # Try to extract a readable primary message
-            first_field = next(iter(error_detail), None)
-            if first_field and error_detail[first_field]:
-                message = str(error_detail[first_field][0])
+
+            # Check non_field_errors for specific error codes (e.g. login failures)
+            non_field = error_detail.get('non_field_errors')
+            if non_field:
+                first_error = non_field[0]
+                raw_code = getattr(first_error, 'code', None)
+                if raw_code:
+                    code = str(raw_code).upper().replace('-', '_')
+                message = str(first_error)
+            else:
+                # Try to extract a readable primary message from first field
+                first_field = next(iter(error_detail), None)
+                if first_field and error_detail[first_field]:
+                    message = str(error_detail[first_field][0])
     elif isinstance(error_detail, list):
         code = 'ERROR'
         message = str(error_detail[0]) if error_detail else 'Error'
