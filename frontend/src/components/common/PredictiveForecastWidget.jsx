@@ -57,10 +57,10 @@ export const PredictiveForecastWidget = ({ forecast, erpProfile, isTerminal = fa
           </div>
           <div>
             <h4 style={{ margin: 0, fontSize: '0.9rem', fontWeight: 700, color: 'var(--text-primary, #0d1f35)' }}>
-              Predictive Intelligence & Smart ETA
+              Rule-Based SLA Risk &amp; ETA Analysis
             </h4>
             <span style={{ fontSize: '0.72rem', color: 'var(--text-muted, #5a7088)' }}>
-              Deterministic queue velocity & historical stage dwell analysis
+              Deterministic queue velocity &amp; historical stage dwell analysis
             </span>
           </div>
         </div>
