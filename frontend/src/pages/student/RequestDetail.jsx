@@ -147,8 +147,6 @@ export const RequestDetail = () => {
   const [appealReason, setAppealReason] = useState('');
   const [submittingAppeal, setSubmittingAppeal] = useState(false);
 
-  useEffect(() => { fetchDetail(); }, [id]);
-
   const fetchDetail = async () => {
     setLoading(true);
     try {
@@ -157,6 +155,8 @@ export const RequestDetail = () => {
     } catch { setError('Failed to load request details.'); }
     finally { setLoading(false); }
   };
+
+  useEffect(() => { fetchDetail(); }, [id]);
 
   const handleCopyRef = () => {
     if (!request?.reference_number) return;
