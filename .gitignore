@@ -39,17 +39,13 @@ db.sqlite3
 media/
 backend/media/
 
-# Project Reports & Documentation Generated Binaries
+# Project Reports, Documentation & Screenshots (kept local only)
+docs/
 *.docx
 *.pdf
-docs/*.docx
-docs/*.pdf
 
 # Temp / Screenshot Scripts (not part of project)
-frontend/capture_screens.mjs
+frontend/capture_*.mjs
 frontend/patch_screens.mjs
-frontend/capture_hd_screenshots.mjs
 frontend/take_screenshots.js
 backend/get_ids.py
-
-
