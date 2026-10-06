@@ -112,7 +112,7 @@ class Command(BaseCommand):
                     request=req,
                     actor=None,  # System action
                     action='priority_escalated',
-                    notes=(
+                    description=(
                         f'[AUTO-ESCALATION] Priority escalated from "{e["old"]}" to "{e["new"]}" '
                         f'by InsightFlow Auto-Escalation Engine. '
                         f'SLA elapsed: {e["elapsed_pct"]}% at stage "{req.current_stage.name}".'

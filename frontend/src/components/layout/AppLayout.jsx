@@ -3,8 +3,11 @@ import { Outlet } from 'react-router-dom';
 import { Navbar } from './Navbar';
 import { Sidebar } from './Sidebar';
 import { NotificationDrawer } from './NotificationDrawer';
+import { AIHelpWidget } from '../common/AIHelpWidget';
+import { useAuth } from '../../context/AuthContext';
 
 export const AppLayout = () => {
+  const { role } = useAuth();
   return (
     <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
       <Navbar />
@@ -15,6 +18,8 @@ export const AppLayout = () => {
         </main>
       </div>
       <NotificationDrawer />
+      {/* AI Help Widget — only shown to students */}
+      {role === 'student' && <AIHelpWidget />}
     </div>
   );
 };
