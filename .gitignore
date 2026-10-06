@@ -48,6 +48,8 @@ docs/*.pdf
 # Temp / Screenshot Scripts (not part of project)
 frontend/capture_screens.mjs
 frontend/patch_screens.mjs
+frontend/capture_hd_screenshots.mjs
 frontend/take_screenshots.js
 backend/get_ids.py
+
 
