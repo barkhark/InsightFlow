@@ -40,7 +40,9 @@ jobs:
       - name: Execute Automated Test Suite (pytest)
         run: |
           cd backend
-          pytest -q --settings=insightflow.settings.development
+          pytest -q
+        env:
+          DJANGO_SETTINGS_MODULE: insightflow.settings.development
 
   frontend-build:
     name: Frontend Build Verification
