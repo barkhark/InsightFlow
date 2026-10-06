@@ -94,9 +94,10 @@ export const LoginPage = () => {
       });
       const data = await res.json();
       if (data.success) {
-        // Store tokens the same way the regular login does
-        localStorage.setItem('access_token', data.data.access);
-        localStorage.setItem('refresh_token', data.data.refresh);
+        // Store tokens matching InsightFlow AuthContext keys
+        localStorage.setItem('insightflow_access_token', data.data.access);
+        localStorage.setItem('insightflow_refresh_token', data.data.refresh);
+        localStorage.setItem('insightflow_user', JSON.stringify(data.data.user));
         const role = data.data.user?.role;
         window.location.href = role === 'admin'
           ? '/admin/dashboard'
