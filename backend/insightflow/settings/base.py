@@ -269,3 +269,11 @@ SECURE_SSL_REDIRECT = config('SECURE_SSL_REDIRECT', default=False, cast=bool)
 # API Version
 # ============================================================
 API_VERSION = '1.0.0'
+
+# ============================================================
+# Google OAuth2 (Sign in with Google)
+# ============================================================
+GOOGLE_OAUTH_CLIENT_ID = config(
+    'GOOGLE_OAUTH_CLIENT_ID',
+    default='100454548624-hidlhb729f8nmi0pnhgqslr1egab8ns7.apps.googleusercontent.com'
+)

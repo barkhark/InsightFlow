@@ -1,9 +1,10 @@
 """
 InsightFlow — Accounts Views
 
-LoginView:  POST /api/v1/auth/login/       → access + refresh tokens + user data
-LogoutView: POST /api/v1/auth/logout/      → blacklist refresh token
-MeView:     GET  /api/v1/auth/me/          → current authenticated user
+LoginView:      POST /api/v1/auth/login/          → access + refresh tokens + user data
+LogoutView:     POST /api/v1/auth/logout/         → blacklist refresh token
+MeView:         GET  /api/v1/auth/me/             → current authenticated user
+GoogleAuthView: POST /api/v1/auth/google/         → Sign in with Google OAuth2
 
 Token refresh is delegated directly to SimpleJWT's TokenRefreshView (mounted in urls.py).
 
@@ -11,6 +12,8 @@ All responses follow the InsightFlow envelope:
   Success: { "success": true, "data": {...} }
   Error:   { "success": false, "error": { "code": "...", "message": "..." } }
 """
+import logging
+from django.conf import settings
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny, IsAuthenticated
@@ -20,6 +23,9 @@ from rest_framework_simplejwt.exceptions import TokenError
 
 from core.middleware import LoginRateThrottle
 from .serializers import LoginSerializer, UserMeSerializer
+from .models import User
+
+logger = logging.getLogger('insightflow')
 
 
 class LoginView(APIView):
@@ -118,3 +124,131 @@ class MeView(APIView):
             'success': True,
             'data': serializer.data,
         }, status=status.HTTP_200_OK)
+
+
+class GoogleAuthView(APIView):
+    """
+    Authenticate a user via Google OAuth2 access token.
+
+    POST /api/v1/auth/google/
+    Body: { "access_token": "<google_access_token>" }
+
+    Flow:
+        1. Use the Google access token to fetch user info from Google's userinfo endpoint.
+        2. Extract email from the verified response.
+        3. Find the matching InsightFlow user by email.
+        4. Issue InsightFlow JWT tokens.
+
+    Note: This does NOT auto-create new users — users must already exist
+    in InsightFlow (seeded by admin) and use a matching Google account email.
+
+    Returns:
+        200: { success, data: { access, refresh, user } }
+        400: Invalid/expired Google token
+        404: No InsightFlow account with that Google email
+    """
+    permission_classes = [AllowAny]
+    authentication_classes = []
+    throttle_classes = [LoginRateThrottle]
+
+    def post(self, request):
+        access_token = request.data.get('access_token')
+        if not access_token:
+            return Response({
+                'success': False,
+                'data': None,
+                'error': {
+                    'code': 'MISSING_TOKEN',
+                    'message': 'Google access token is required.',
+                    'details': None,
+                }
+            }, status=status.HTTP_400_BAD_REQUEST)
+
+        # Fetch user info from Google's userinfo endpoint
+        try:
+            import requests as req_lib
+            google_response = req_lib.get(
+                'https://www.googleapis.com/oauth2/v3/userinfo',
+                headers={'Authorization': f'Bearer {access_token}'},
+                timeout=10,
+            )
+            if google_response.status_code != 200:
+                raise ValueError(f'Google returned status {google_response.status_code}')
+            id_info = google_response.json()
+        except ValueError as exc:
+            logger.warning('Google OAuth token verification failed: %s', exc)
+            return Response({
+                'success': False,
+                'data': None,
+                'error': {
+                    'code': 'INVALID_GOOGLE_TOKEN',
+                    'message': 'Google sign-in failed. Token is invalid or expired. Please try again.',
+                    'details': str(exc),
+                }
+            }, status=status.HTTP_400_BAD_REQUEST)
+        except Exception as exc:
+            logger.error('Unexpected error during Google OAuth: %s', exc)
+            return Response({
+                'success': False,
+                'data': None,
+                'error': {
+                    'code': 'GOOGLE_AUTH_ERROR',
+                    'message': 'Google sign-in is temporarily unavailable. Please use email/password.',
+                    'details': None,
+                }
+            }, status=status.HTTP_400_BAD_REQUEST)
+
+        # Extract user info from Google response
+        email = id_info.get('email', '').lower().strip()
+
+        if not email:
+            return Response({
+                'success': False,
+                'data': None,
+                'error': {
+                    'code': 'NO_EMAIL_IN_TOKEN',
+                    'message': 'Google account does not have a verified email.',
+                    'details': None,
+                }
+            }, status=status.HTTP_400_BAD_REQUEST)
+
+        # Find matching InsightFlow user
+        try:
+            user = User.objects.get(email=email)
+        except User.DoesNotExist:
+            return Response({
+                'success': False,
+                'data': None,
+                'error': {
+                    'code': 'NO_INSIGHTFLOW_ACCOUNT',
+                    'message': f'No InsightFlow account found for "{email}". '
+                               f'Please contact your administrator to link your Google account.',
+                    'details': None,
+                }
+            }, status=status.HTTP_404_NOT_FOUND)
+
+        if not user.is_active:
+            return Response({
+                'success': False,
+                'data': None,
+                'error': {
+                    'code': 'ACCOUNT_INACTIVE',
+                    'message': 'Your InsightFlow account has been deactivated.',
+                    'details': None,
+                }
+            }, status=status.HTTP_403_FORBIDDEN)
+
+        # Issue InsightFlow JWT tokens
+        refresh = RefreshToken.for_user(user)
+        logger.info('Google OAuth login successful for %s (%s)', user.full_name, email)
+
+        return Response({
+            'success': True,
+            'data': {
+                'access': str(refresh.access_token),
+                'refresh': str(refresh),
+                'user': UserMeSerializer(user).data,
+            },
+            'message': f'Welcome, {user.full_name}! Signed in with Google.',
+        }, status=status.HTTP_200_OK)
+

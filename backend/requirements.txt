@@ -18,6 +18,11 @@ gunicorn==21.2.0
 # Industry: PostgreSQL driver (activated via DB_ENGINE env var)
 psycopg2-binary==2.9.9
 
+# Google OAuth2 (Sign in with Google)
+google-auth==2.60.0
+google-auth-oauthlib==1.5.0
+requests==2.34.2
+
 # Testing
 pytest==8.3.3
 pytest-django==4.9.0
