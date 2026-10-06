@@ -200,6 +200,7 @@ class GoogleAuthView(APIView):
 
         # Extract user info from Google response
         email = id_info.get('email', '').lower().strip()
+        google_name = id_info.get('name', email.split('@')[0].replace('.', ' ').title())
 
         if not email:
             return Response({
@@ -212,20 +213,31 @@ class GoogleAuthView(APIView):
                 }
             }, status=status.HTTP_400_BAD_REQUEST)
 
-        # Find matching InsightFlow user
+        # Find or auto-create InsightFlow user
+        # New users are created as Students (institutional default)
+        created = False
         try:
             user = User.objects.get(email=email)
         except User.DoesNotExist:
-            return Response({
-                'success': False,
-                'data': None,
-                'error': {
-                    'code': 'NO_INSIGHTFLOW_ACCOUNT',
-                    'message': f'No InsightFlow account found for "{email}". '
-                               f'Please contact your administrator to link your Google account.',
-                    'details': None,
-                }
-            }, status=status.HTTP_404_NOT_FOUND)
+            # Auto-create a new student account for first-time Google sign-in
+            import uuid as uuid_mod
+            from apps.accounts.models import StudentProfile
+            user = User.objects.create_user(
+                email=email,
+                full_name=google_name,
+                role=User.Role.STUDENT,
+                password=None,  # Google users don't need a password
+            )
+            # Create a minimal StudentProfile
+            StudentProfile.objects.create(
+                user=user,
+                roll_number=f'G-{str(user.id)[:8].upper()}',
+                programme='Google SSO',
+                semester=1,
+                division='A',
+            )
+            created = True
+            logger.info('Auto-created InsightFlow account for Google user: %s (%s)', google_name, email)
 
         if not user.is_active:
             return Response({
@@ -240,7 +252,14 @@ class GoogleAuthView(APIView):
 
         # Issue InsightFlow JWT tokens
         refresh = RefreshToken.for_user(user)
-        logger.info('Google OAuth login successful for %s (%s)', user.full_name, email)
+        action = 'created and signed in' if created else 'signed in'
+        logger.info('Google OAuth %s successfully for %s (%s)', action, user.full_name, email)
+
+        welcome_msg = (
+            f'Welcome to InsightFlow, {user.full_name}! Your student account has been created.'
+            if created else
+            f'Welcome back, {user.full_name}! Signed in with Google.'
+        )
 
         return Response({
             'success': True,
@@ -249,6 +268,5 @@ class GoogleAuthView(APIView):
                 'refresh': str(refresh),
                 'user': UserMeSerializer(user).data,
             },
-            'message': f'Welcome, {user.full_name}! Signed in with Google.',
+            'message': welcome_msg,
         }, status=status.HTTP_200_OK)
-
