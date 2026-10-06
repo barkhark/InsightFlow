@@ -22,6 +22,9 @@ import { AdminBottlenecks } from './pages/admin/AdminBottlenecks';
 import { AdminAllRequests } from './pages/admin/AdminAllRequests';
 import { AdminTrends } from './pages/admin/AdminTrends';
 import { AdminReports } from './pages/admin/AdminReports';
+import { AdminAnomalyDetection } from './pages/admin/AdminAnomalyDetection';
+import { AdminDemandForecast } from './pages/admin/AdminDemandForecast';
+import { AdminWorkloadBalancer } from './pages/admin/AdminWorkloadBalancer';
 
 // Route Guard Component
 const ProtectedRoute = ({ allowedRoles = [], children }) => {
@@ -181,6 +184,30 @@ function App() {
                 element={
                   <ProtectedRoute allowedRoles={['admin']}>
                     <AdminReports />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/admin/anomalies"
+                element={
+                  <ProtectedRoute allowedRoles={['admin']}>
+                    <AdminAnomalyDetection />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/admin/demand-forecast"
+                element={
+                  <ProtectedRoute allowedRoles={['admin']}>
+                    <AdminDemandForecast />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/admin/workload-balancer"
+                element={
+                  <ProtectedRoute allowedRoles={['admin']}>
+                    <AdminWorkloadBalancer />
                   </ProtectedRoute>
                 }
               />

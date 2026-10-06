@@ -26,6 +26,9 @@ from core.permissions import IsAdmin
 from core.sla_engine import SLAEngine
 from core.predictive_engine import PredictiveEngine
 from core.erp_service import ERPIntegrationService
+from core.anomaly_engine import AnomalyEngine
+from core.demand_forecast_engine import DemandForecastEngine
+from core.workload_balancer import WorkloadBalancerEngine
 from apps.requests.models import ServiceRequest, RequestStageHistory, RequestFeedback
 from apps.departments.models import Department
 from apps.notifications.models import Notification
@@ -627,3 +630,74 @@ class AdminCSATAnalyticsView(APIView):
             'meta': {'period_days': days, 'total_feedbacks': total}
         })
 
+
+
+class AnomalyDetectionView(APIView):
+    """
+    GET /api/v1/admin/anomalies/
+    Returns statistically detected anomalies across institutional workflow data.
+    Uses mean + 2 standard deviation methodology. No black boxes.
+    """
+    permission_classes = [IsAdmin]
+
+    def get(self, request):
+        days = int(request.query_params.get('days', 30))
+        findings = AnomalyEngine.detect_all_anomalies(days=days)
+        return Response({
+            'success': True,
+            'data': findings,
+            'meta': {
+                'period_days': days,
+                'total_anomalies': len(findings),
+                'critical_count': sum(1 for f in findings if f.get('severity') == 'critical'),
+                'warning_count': sum(1 for f in findings if f.get('severity') == 'warning'),
+                'info_count': sum(1 for f in findings if f.get('severity') == 'info'),
+                'engine': 'AnomalyEngine v1.0 - Statistical (mean + 2 sigma)',
+            }
+        })
+
+
+class DemandForecastView(APIView):
+    """
+    GET /api/v1/admin/demand-forecast/
+    Generates a deterministic 7-14 day demand forecast using day-of-week
+    pattern analysis and recent trend momentum.
+    """
+    permission_classes = [IsAdmin]
+
+    def get(self, request):
+        forecast_days = min(14, int(request.query_params.get('forecast_days', 7)))
+        history_days = min(180, int(request.query_params.get('history_days', 60)))
+        result = DemandForecastEngine.generate_forecast(
+            forecast_days=forecast_days,
+            history_days=history_days,
+        )
+        return Response({
+            'success': True,
+            'data': result,
+            'meta': {
+                'forecast_days': forecast_days,
+                'history_days': history_days,
+                'engine': 'DemandForecastEngine v1.0 - Day-of-Week Pattern + Momentum',
+            }
+        })
+
+
+class WorkloadBalancerView(APIView):
+    """
+    GET /api/v1/admin/workload-balance/
+    Analyzes staff workload distribution and generates reassignment recommendations.
+    """
+    permission_classes = [IsAdmin]
+
+    def get(self, request):
+        days = int(request.query_params.get('days', 30))
+        result = WorkloadBalancerEngine.analyze_workload(days=days)
+        return Response({
+            'success': True,
+            'data': result,
+            'meta': {
+                'period_days': days,
+                'engine': 'WorkloadBalancerEngine v1.0 - Queue Load + Efficiency Analysis',
+            }
+        })

@@ -31,6 +31,7 @@ from .admin_views import (
     BottleneckAnalysisView, TrendsView, AdminRequestListView,
     AdminInsightsView, AdminPredictiveForecastView, StudentERPProfileView,
     NotificationDispatchLogsView, AdminCSVExportView, AdminCSATAnalyticsView,
+    AnomalyDetectionView, DemandForecastView, WorkloadBalancerView,
 )
 from .health_views import HealthCheckView
 from .attachment_views import AttachmentDownloadView
@@ -108,6 +109,11 @@ urlpatterns = [
     path('admin/predictive-forecast/', AdminPredictiveForecastView.as_view(), name='admin-predictive-forecast'),
     path('admin/export/csv/', AdminCSVExportView.as_view(), name='admin-csv-export'),
     path('admin/csat-analytics/', AdminCSATAnalyticsView.as_view(), name='admin-csat-analytics'),
+
+    # ── AI-Powered Intelligence Endpoints ──────────────────────────────────
+    path('admin/anomalies/', AnomalyDetectionView.as_view(), name='admin-anomalies'),
+    path('admin/demand-forecast/', DemandForecastView.as_view(), name='admin-demand-forecast'),
+    path('admin/workload-balance/', WorkloadBalancerView.as_view(), name='admin-workload-balance'),
 
     # Health Check Probe
     path('health/', HealthCheckView.as_view(), name='health-check'),

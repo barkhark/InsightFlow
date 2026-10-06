@@ -3,7 +3,7 @@ import { NavLink } from 'react-router-dom';
 import {
   Inbox, PlusCircle, BarChart3, Activity,
   AlertTriangle, FileSpreadsheet, Settings, ExternalLink, ChevronRight,
-  TrendingUp, Download,
+  TrendingUp, Download, ShieldAlert, Calendar, Users, Zap,
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 
@@ -41,6 +41,9 @@ export const Sidebar = () => {
       { to: '/admin/trends',            label: 'Trends & Volume',      icon: TrendingUp,      iconColor: '#a8e0b0' },
       { to: '/admin/all-requests',      label: 'All Requests Ledger',  icon: FileSpreadsheet, iconColor: '#a8b8d8' },
       { to: '/admin/reports',           label: 'Reports & Export',     icon: Download,        iconColor: '#c4a0e8' },
+      { to: '/admin/anomalies',         label: 'Anomaly Detection',    icon: ShieldAlert,     iconColor: '#f87171' },
+      { to: '/admin/demand-forecast',   label: 'Demand Forecasting',   icon: Calendar,        iconColor: '#60a5fa' },
+      { to: '/admin/workload-balancer', label: 'Workload Balancer',    icon: Users,           iconColor: '#34d399' },
     ];
     return [];
   };

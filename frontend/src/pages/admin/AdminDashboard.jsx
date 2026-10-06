@@ -291,6 +291,27 @@ export const AdminDashboard = () => {
           color="#8b5cf6"
           onClick={() => navigate('/admin/reports')}
         />
+        <ModuleCard
+          title="AI Anomaly Detection"
+          desc="Statistical outlier engine (mean ± 2σ) auto-detecting SLA violations, departmental volume surges, throughput drops, and irregular activity patterns."
+          icon={Zap}
+          color="#ef4444"
+          onClick={() => navigate('/admin/anomalies')}
+        />
+        <ModuleCard
+          title="Predictive Demand Forecast"
+          desc="Deterministic day-of-week intake projection modeling 7 to 14 days ahead with rolling confidence bands and historical momentum tracking."
+          icon={Sparkles}
+          color="#3b82f6"
+          onClick={() => navigate('/admin/demand-forecast')}
+        />
+        <ModuleCard
+          title="Intelligent Workload Balancer"
+          desc="Staff queue load distribution optimizer with coefficient of variation scoring and automated from→to rebalancing recommendations."
+          icon={Users}
+          color="#10b981"
+          onClick={() => navigate('/admin/workload-balancer')}
+        />
       </div>
 
       {/* ── Service Improvement Insights (AI/Rule Engine) ────── */}

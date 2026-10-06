@@ -1,0 +1,908 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>InsightFlow: Intelligent Workflow Analytics &amp; Accountability Platform — Final MCA Project Report</title>
+<style>
+  @page {
+    size: A4;
+    margin: 20mm 15mm 20mm 20mm;
+    @bottom-right {
+      content: counter(page);
+    }
+  }
+  * {
+    box-sizing: border-box;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    color: #1e293b;
+    background: #ffffff;
+    line-height: 1.5;
+    font-size: 11pt;
+    margin: 0;
+    padding: 0;
+  }
+  .page {
+    page-break-after: always;
+    min-height: 100vh;
+    padding: 10mm 5mm;
+    display: flex;
+    flex-direction: column;
+  }
+  .page-border {
+    border: 2px solid #0f172a;
+    padding: 25px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  h1 {
+    font-size: 18pt;
+    font-weight: 700;
+    color: #0f172a;
+    border-bottom: 2px solid #0f172a;
+    padding-bottom: 5px;
+    margin-top: 25px;
+    margin-bottom: 12px;
+    page-break-after: avoid;
+  }
+  h2 {
+    font-size: 13.5pt;
+    font-weight: 700;
+    color: #1e3a8a;
+    margin-top: 18px;
+    margin-bottom: 8px;
+    page-break-after: avoid;
+  }
+  h3 {
+    font-size: 11.5pt;
+    font-weight: 700;
+    color: #334155;
+    margin-top: 14px;
+    margin-bottom: 6px;
+    page-break-after: avoid;
+  }
+  p {
+    margin: 0 0 10px 0;
+    text-align: justify;
+  }
+  ul {
+    margin: 0 0 10px 20px;
+    padding: 0;
+  }
+  li {
+    margin-bottom: 4px;
+  }
+  .figure-box {
+    margin: 15px 0;
+    text-align: center;
+    page-break-inside: avoid;
+  }
+  .figure-box img {
+    max-width: 95%;
+    height: auto;
+    border: 1px solid #cbd5e1;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.06);
+  }
+  .caption {
+    font-size: 9.5pt;
+    font-weight: 600;
+    font-style: italic;
+    color: #334155;
+    margin-top: 6px;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 12px 0;
+    font-size: 9.5pt;
+    page-break-inside: avoid;
+  }
+  th, td {
+    border: 1px solid #cbd5e1;
+    padding: 6px 10px;
+    text-align: left;
+  }
+  th {
+    background-color: #f1f5f9;
+    color: #0f172a;
+    font-weight: 700;
+  }
+  tr:nth-child(even) {
+    background-color: #f8fafc;
+  }
+  pre {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-left: 4px solid #1e3a8a;
+    padding: 10px 14px;
+    font-family: 'Consolas', 'Courier New', monospace;
+    font-size: 9pt;
+    line-height: 1.4;
+    overflow-x: auto;
+    page-break-inside: avoid;
+    white-space: pre-wrap;
+  }
+  .cover-title {
+    font-size: 22pt;
+    font-weight: 800;
+    color: #0e7490;
+    margin: 15px 0;
+    text-align: center;
+  }
+  .calligraphic {
+    font-family: 'Brush Script MT', 'Georgia', cursive;
+    font-size: 34pt;
+    font-weight: bold;
+    color: #0f172a;
+    text-align: center;
+    margin: 10px 0 20px 0;
+  }
+</style>
+</head>
+<body>
+
+<!-- PAGE 1: COVER PAGE -->
+<div class="page">
+  <div class="page-border" style="text-align: center;">
+    <div>
+      <div style="font-size: 16pt; font-weight: bold; margin-top: 15px;">Mini Project Report</div>
+      <div style="font-size: 13pt; margin-top: 5px;">On</div>
+      <div class="cover-title">“InsightFlow: Intelligent Workflow Analytics &amp; Accountability Platform”</div>
+      <div style="font-size: 12pt; margin-top: 10px;">By</div>
+      <div style="font-size: 14pt; font-weight: bold; color: #0f172a;">1272250642 – Barkha Rajesh Khobragade</div>
+      <div style="font-size: 11pt; margin-top: 15px;">For</div>
+      <div style="font-size: 13pt; font-weight: bold;">MCA40130 Mini Project<br>SY MCA<br>AY 2026–2027</div>
+      <div style="font-size: 11pt; margin-top: 15px;">Under The Guidance Of</div>
+      <div style="font-size: 14pt; font-weight: bold;">Mr. Kaustubh Keer</div>
+      <div style="font-size: 11pt; margin-top: 15px;">Submitted To</div>
+    </div>
+    
+    <div>
+      <img src="file:///d:/MCA_MIT/SEM3/MINI Project/P1.InsightFlow_Full_Project/InsightFlow/docs/mit_wpu_logo.png" style="max-width: 280px; margin: 10px auto;" />
+      <div style="font-size: 10.5pt; margin-top: 10px;">In partial fulfillment of the requirement for the award of Degree of</div>
+      <div style="font-size: 13.5pt; font-weight: bold;">Master of Computer Applications</div>
+      <div style="font-size: 10.5pt; margin-top: 6px;">Submitted Through</div>
+      <div style="font-size: 12pt; font-weight: bold;">MIT-WPU<br>School of Computer Science and Engineering<br>Department of Computer Science and Applications</div>
+    </div>
+  </div>
+</div>
+
+<!-- PAGE 2: CERTIFICATE -->
+<div class="page">
+  <div class="page-border">
+    <div style="text-align: center;">
+      <img src="file:///d:/MCA_MIT/SEM3/MINI Project/P1.InsightFlow_Full_Project/InsightFlow/docs/mit_wpu_logo.png" style="max-width: 260px;" />
+      <div style="font-size: 13pt; font-weight: bold; margin-top: 5px;">Department of Computer Science and Applications</div>
+      <div class="calligraphic">Certificate</div>
+    </div>
+
+    <div style="font-size: 11.5pt; line-height: 1.6; text-align: justify;">
+      This is to certify that, <b>Barkha Rajesh Khobragade (PRN: 1272250642)</b>, student of <b>SY MCA, Semester III</b> has completed Mini Project entitled <b>“InsightFlow: Intelligent Workflow Analytics &amp; Accountability Platform”</b> under guidance of <b>Mr. Kaustubh Keer</b> in partial fulfilment of the requirements for the award of <b>Master of Computer Applications</b> prescribed under <b>Dr. Vishwanath Karad MIT World Peace University, Pune</b>.<br><br>
+      This project is the record of authentic work carried out by her during the academic year 2026-2027.
+    </div>
+
+    <div style="margin-top: 40px;">
+      <table style="border: none; margin: 0;">
+        <tr style="background: none;">
+          <td style="border: none; text-align: center; width: 33%;">
+            <br><br>_______________________<br>
+            <b>Mr. Kaustubh Keer</b><br>
+            Internal Guide<br>
+            <span style="font-size: 8.5pt; color: #64748b;">School of CSE</span>
+          </td>
+          <td style="border: none; text-align: center; width: 33%;">
+            <br><br>_______________________<br>
+            <b>Dr. P. S. Metkewar</b><br>
+            Program Head- MCA<br>
+            <span style="font-size: 8.5pt; color: #64748b;">School of CSE</span>
+          </td>
+          <td style="border: none; text-align: center; width: 33%;">
+            <br><br>_______________________<br>
+            <b>Dr. Anuradha S. Kanade</b><br>
+            Program Director<br>
+            <span style="font-size: 8.5pt; color: #64748b;">School of CSE</span>
+          </td>
+        </tr>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- PAGE 3: ACKNOWLEDGEMENT -->
+<div class="page">
+  <div class="page-border">
+    <div>
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <span style="font-size: 11pt;">Date: _____ / _____ / 2026</span>
+        <img src="file:///d:/MCA_MIT/SEM3/MINI Project/P1.InsightFlow_Full_Project/InsightFlow/docs/mit_wpu_logo.png" style="max-width: 200px;" />
+      </div>
+      <div class="calligraphic">Acknowledgement</div>
+
+      <p>I wish to express my profound gratitude to all the individuals who supported me throughout the completion of my Mini Project III. This report is a testament to their guidance, patience, and resources.</p>
+      <p><b>Mentorship:</b> I am deeply indebted to my esteemed project guide, <b>Mr. Kaustubh Keer</b>, for his invaluable mentorship, direction, and encouragement. His advice was crucial in defining the scope and methodology of this project.</p>
+      <p><b>Institutional Support:</b> I extend my sincere thanks to the Head of the Program, <b>Dr. P. S. Metkewar</b>, and the Program Director, <b>Dr. Anuradha S. Kanade</b>, for providing the necessary facilities, academic framework, and environment conducive to advanced project work and research.</p>
+      <p>My appreciation also goes to all the <b>Faculty Members</b> of the Department of Computer Science and Applications for their comprehensive instruction and expertise, which equipped me with the foundational engineering knowledge required for this project.</p>
+      <p>Finally, I am grateful to my <b>Classmates</b> for their constructive feedback and discussions, which enriched my understanding and helped me refine my technical implementation.</p>
+    </div>
+
+    <div>
+      <table style="width: 320px; border: 1px solid #cbd5e1;">
+        <tr><td style="font-weight: bold; width: 100px;">Name:</td><td>Barkha Rajesh Khobragade</td></tr>
+        <tr><td style="font-weight: bold;">PRN:</td><td>1272250642</td></tr>
+        <tr><td style="font-weight: bold;">Place:</td><td>Pune</td></tr>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- PAGE 4: DECLARATION -->
+<div class="page">
+  <div class="page-border">
+    <div>
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <span style="font-size: 11pt;">Date: _____ / _____ / 2026</span>
+        <img src="file:///d:/MCA_MIT/SEM3/MINI Project/P1.InsightFlow_Full_Project/InsightFlow/docs/mit_wpu_logo.png" style="max-width: 200px;" />
+      </div>
+      <div class="calligraphic">Declaration</div>
+
+      <p>I, <b>Barkha Rajesh Khobragade</b>, hereby declare that this Mini Project report entitled <b>“InsightFlow: Intelligent Workflow Analytics &amp; Accountability Platform”</b> is an authentic record of my own work carried out under the supervision of <b>Mr. Kaustubh Keer</b>.</p>
+      <p>I further declare that the content of this report, including all system architecture, entity modeling, database schema, workflow state engines, deterministic SLA algorithms, testing suites, and user interface designs, is original and has not been submitted previously for any other degree or diploma at this or any other university or academic institution.</p>
+      <p>I take sole and full responsibility for any errors, omissions, or misrepresentations found within this report.</p>
+    </div>
+
+    <div>
+      <table style="width: 380px; border: 1px solid #cbd5e1;">
+        <tr><td style="font-weight: bold; width: 120px;">Signature:</td><td><br>_____________________________________</td></tr>
+        <tr><td style="font-weight: bold;">Name:</td><td>Barkha Rajesh Khobragade</td></tr>
+        <tr><td style="font-weight: bold;">PRN:</td><td>1272250642</td></tr>
+        <tr><td style="font-weight: bold;">Place:</td><td>Pune</td></tr>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- PAGE 5: TABLE OF CONTENTS -->
+<div class="page">
+  <div style="text-align: center; margin-bottom: 15px;">
+    <div class="calligraphic" style="margin: 0; font-size: 26pt;">Table of Contents</div>
+  </div>
+  <table>
+    <thead>
+      <tr>
+        <th style="width: 10%; text-align: center;">Index</th>
+        <th style="width: 80%;">Section Title</th>
+        <th style="width: 10%; text-align: center;">Page</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr style="font-weight: bold; background: #f8fafc;"><td style="text-align: center;">1</td><td>INTRODUCTION</td><td style="text-align: center;">6</td></tr>
+      <tr><td style="text-align: center;">1.1</td><td>EXISTING SYSTEM, PROPOSED SYSTEM AND NEED AND OBJECTIVE OF SYSTEM</td><td style="text-align: center;">6</td></tr>
+      <tr><td style="text-align: center;">1.2</td><td>SCOPE OF WORK</td><td style="text-align: center;">8</td></tr>
+      <tr><td style="text-align: center;">1.3</td><td>OPERATING ENVIRONMENT – HARDWARE AND SOFTWARE</td><td style="text-align: center;">9</td></tr>
+      <tr><td style="text-align: center;">1.4</td><td>DESCRIPTION OF TECHNOLOGY USED</td><td style="text-align: center;">10</td></tr>
+      <tr style="font-weight: bold; background: #f8fafc;"><td style="text-align: center;">2</td><td>PROPOSED SYSTEM</td><td style="text-align: center;">12</td></tr>
+      <tr><td style="text-align: center;">2.1</td><td>FEASIBILITY STUDY</td><td style="text-align: center;">12</td></tr>
+      <tr><td style="text-align: center;">2.2</td><td>USER REQUIREMENTS</td><td style="text-align: center;">13</td></tr>
+      <tr style="font-weight: bold; background: #f8fafc;"><td style="text-align: center;">3</td><td>ANALYSIS AND DESIGN (If Applicable)</td><td style="text-align: center;">15</td></tr>
+      <tr><td style="text-align: center;">3.1</td><td>OBJECT DIAGRAM</td><td style="text-align: center;">15</td></tr>
+      <tr><td style="text-align: center;">3.2</td><td>CLASS DIAGRAM</td><td style="text-align: center;">17</td></tr>
+      <tr><td style="text-align: center;">3.3</td><td>USE CASE DIAGRAM</td><td style="text-align: center;">19</td></tr>
+      <tr><td style="text-align: center;">3.4</td><td>SEQUENCE DIAGRAM</td><td style="text-align: center;">21</td></tr>
+      <tr><td style="text-align: center;">3.5</td><td>ACTIVITY DIAGRAM</td><td style="text-align: center;">23</td></tr>
+      <tr><td style="text-align: center;">3.6</td><td>MODULE HIERARCHY DIAGRAM</td><td style="text-align: center;">25</td></tr>
+      <tr><td style="text-align: center;">3.7</td><td>USER INTERFACE DESIGN (SCREENS ETC.)</td><td style="text-align: center;">27</td></tr>
+      <tr><td style="text-align: center;">3.8</td><td>TABLE SPECIFICATIONS &amp; CHEN ER DIAGRAM</td><td style="text-align: center;">29</td></tr>
+      <tr style="font-weight: bold; background: #f8fafc;"><td style="text-align: center;">4</td><td>INPUT AND OUTPUT SCREENS</td><td style="text-align: center;">34</td></tr>
+      <tr style="font-weight: bold; background: #f8fafc;"><td style="text-align: center;">5</td><td>TEST PROCEDURES AND IMPLEMENTATION</td><td style="text-align: center;">40</td></tr>
+      <tr style="font-weight: bold; background: #f8fafc;"><td style="text-align: center;">6</td><td>SAMPLE CODE</td><td style="text-align: center;">46</td></tr>
+      <tr style="font-weight: bold; background: #f8fafc;"><td style="text-align: center;">7</td><td>LIMITATIONS</td><td style="text-align: center;">52</td></tr>
+      <tr style="font-weight: bold; background: #f8fafc;"><td style="text-align: center;">8</td><td>FUTURE SCOPE</td><td style="text-align: center;">53</td></tr>
+      <tr style="font-weight: bold; background: #f8fafc;"><td style="text-align: center;">9</td><td>CONCLUSION</td><td style="text-align: center;">54</td></tr>
+      <tr style="font-weight: bold; background: #f8fafc;"><td style="text-align: center;">10</td><td>REFERENCES</td><td style="text-align: center;">55</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- ======================================================================= -->
+<!-- CHAPTER 1: INTRODUCTION -->
+<!-- ======================================================================= -->
+<div style="page-break-before: always;">
+  <h1>1. INTRODUCTION</h1>
+
+  <h2>1.1 EXISTING SYSTEM, PROPOSED SYSTEM AND NEED AND OBJECTIVE OF SYSTEM</h2>
+
+  <h3>Existing System</h3>
+  <p>In traditional institutional and university environments, academic and administrative service delivery is often fragmented across multiple disparate channels. Students seeking transcript verifications, grade sheet re-evaluations, fee installment approvals, hostel room allotments, or IT infrastructure support typically rely on physical paper application forms, unstructured email threads, or informal desk inquiries. This operating paradigm presents several structural weaknesses:</p>
+  <ul>
+    <li><b>Lack of Centralized Status Visibility:</b> Students submit paperwork or emails without any transparent mechanism to trace which department, officer, or workflow stage currently holds their request.</li>
+    <li><b>Fragmented Departmental Coordination:</b> Departments operate as isolated administrative silos with independent spreadsheets and physical ledgers, making cross-departmental coordination cumbersome.</li>
+    <li><b>Absence of Deterministic SLA Tracking:</b> Institutional service level targets exist primarily as guidelines without real-time tracking, resulting in requests languishing unnoticed until manually escalated.</li>
+    <li><b>Lack of Auditability and Accountability:</b> When delays or oversights occur, it is difficult to identify whether bottleneck dwell time stems from staff workload, missing documentation, or processing latency.</li>
+    <li><b>Deficit of Actionable Operational Intelligence:</b> Institutional directors lack empirical dashboards revealing department compliance rates, stage bottleneck hotspots, or recurring service failure categories.</li>
+  </ul>
+
+  <h3>Proposed System: InsightFlow</h3>
+  <p>InsightFlow is a decoupled, role-governed web application designed to centralize and automate university service workflows while enforcing deterministic SLA accountability. The platform integrates a modern React single-page frontend with a Django REST Framework backend, supported by a structured relational database architecture.</p>
+  <p>InsightFlow provides pre-configured multi-tenant routing across 8 academic and administrative departments (Academic Administration, Examination Cell, Facilities &amp; Maintenance, Finance &amp; Accounts, Hostel &amp; Student Affairs, IT Services, Library Services, and Transport Services). The system implements 42 granular service categories governed by 3 distinct workflow state machines (Administrative Approval, Certificate Issuance, and Issue Resolution) comprising 13 discrete lifecycle stages. Crucially, every transition is validated atomically, tracked via stage dwell history, logged into an append-only immutable audit ledger, and monitored by a deterministic mathematical SLA engine.</p>
+
+  <h3>Need of the System</h3>
+  <p>Higher educational institutions require a reliable, transparent bridge between student requests and administrative fulfillment. Eliminating physical bottlenecks and informal escalation pathways directly enhances student satisfaction, accelerates administrative turnaround times, and provides institutional governance with authentic operational transparency.</p>
+
+  <h3>Objectives of the System</h3>
+  <ul>
+    <li><b>Automated Request Management:</b> Automate institutional request intake across 8 university departments using dynamic JSON-based form schemas tailored to 42 granular service categories.</li>
+    <li><b>Departmental Isolation &amp; Security:</b> Enforce strict Role-Based Access Control (RBAC) isolating Student, Staff, and Administrator capabilities while restricting departmental staff access to authorized queues.</li>
+    <li><b>Deterministic SLA Accountability:</b> Calculate real-time stage dwell times and deterministic warning/critical SLA breach thresholds without black-box opacity.</li>
+    <li><b>Immutable Governance Audit Trail:</b> Maintain an append-only, tamper-evident audit ledger recording every stage transition, note, and assignment timestamp.</li>
+    <li><b>Executive Analytics &amp; Telemetry:</b> Provide university leadership with interactive dashboards measuring department compliance rates, stage congestion, and multi-metric CSAT satisfaction ratings.</li>
+  </ul>
+
+  <h2>1.2 SCOPE OF WORK</h2>
+  <h3>Currently Implemented Scope</h3>
+  <ul>
+    <li><b>Role-Based Authentication:</b> JSON Web Token (JWT) bearer authentication with automatic access token rotation, 60-minute session validity, and token blacklisting upon logout.</li>
+    <li><b>Student Self-Service Portal:</b> Interactive student portal featuring active request tracking, a 3-step dynamic request submission wizard, real-time SLA badges, and post-resolution CSAT feedback ratings.</li>
+    <li><b>Staff Workflow Console:</b> Department-filtered workflow processing queue with atomic stage transition controls, internal staff notes, and assignment delegation.</li>
+    <li><b>Institutional Governance Hub:</b> Executive analytics hub with Department Health Matrices, stage bottleneck dwell distributions, volume trends, and CSV data export.</li>
+    <li><b>Atomic Workflow Engine:</b> Pure Python state machine validating legal stage progressions and enforcing atomic database transactions (<code>django.db.transaction.atomic</code>).</li>
+    <li><b>Deterministic SLA &amp; Predictive Forecaster:</b> Mathematical risk scoring and dwell velocity forecaster based on historical stage dwell times and active queue congestion.</li>
+    <li><b>Campus ERP / SIS Simulator:</b> In-memory service simulating campus student records and generating cryptographic SHA-256 verification hash digests for official verification slips.</li>
+    <li><b>Automated Test Suite:</b> Comprehensive test suite containing 115 unit and integration tests passing with 100% success rate under pytest.</li>
+  </ul>
+
+  <h3>Future Scope</h3>
+  <ul>
+    <li><b>Trained Machine Learning SLA Forecaster:</b> Transitioning from deterministic dwell heuristics to trained machine learning models (e.g., Random Forest or Gradient Boosting) once institutional multi-year data is gathered.</li>
+    <li><b>Real-Time Push Notifications:</b> Replacing client-side in-app notification polling with persistent WebSocket connections (Django Channels) and SMS/email gateway integrations.</li>
+    <li><b>Live Enterprise SIS Integration:</b> Transitioning from simulated ERP connectors to live bi-directional REST / SOAP synchronization with enterprise Campus ERP / SIS platforms.</li>
+    <li><b>Cloud Native Production Deployment:</b> Migrating from local SQLite 3 configuration to a managed cloud PostgreSQL instance deployed with Docker containers and Kubernetes clustering.</li>
+    <li><b>Native Mobile Client:</b> Developing native Android and iOS mobile applications using React Native.</li>
+  </ul>
+
+  <h2>1.3 OPERATING ENVIRONMENT – HARDWARE AND SOFTWARE</h2>
+  <h3>Hardware Requirements (Development &amp; Local Evaluation)</h3>
+  <ul>
+    <li><b>Processor:</b> Intel Core i5 / AMD Ryzen 5 or higher (minimum 4 cores, 2.4 GHz).</li>
+    <li><b>System RAM:</b> 8 GB DDR4 minimum (16 GB recommended for concurrent backend and Vite dev servers).</li>
+    <li><b>Disk Storage:</b> 2 GB available SSD storage for repository, virtual environments, SQLite database, and media uploads.</li>
+    <li><b>Display:</b> 1366 x 768 minimum resolution (1920 x 1080 full HD recommended for dashboard analysis).</li>
+    <li><b>Network:</b> Standard TCP/IP network interface for localhost loopback communication (127.0.0.1:8000 and 127.0.0.1:5173).</li>
+  </ul>
+
+  <h3>Software Requirements (Exact Verified Baseline)</h3>
+  <ul>
+    <li><b>Operating System:</b> Microsoft Windows 10 / Windows 11 (64-bit) operating system.</li>
+    <li><b>Backend Runtime:</b> Python 3.11 / 3.12 / 3.13 64-bit runtime environment.</li>
+    <li><b>Web Framework:</b> Django 4.2.16 (LTS release).</li>
+    <li><b>API Toolkit:</b> Django REST Framework 3.15.2.</li>
+    <li><b>Authentication:</b> djangorestframework-simplejwt 5.3.1 (with token blacklist support).</li>
+    <li><b>Backend Packages:</b> django-cors-headers 4.4.0, python-decouple 3.8, Pillow 10.4.0, gunicorn 21.2.0, psycopg2-binary 2.9.9.</li>
+    <li><b>Frontend Runtime:</b> Node.js v20+ / v22+ LTS runtime with npm.</li>
+    <li><b>UI Library:</b> React 19.2.8 and React DOM 19.2.8.</li>
+    <li><b>Build Tool:</b> Vite 8.2.2 build tool and development server.</li>
+    <li><b>Frontend Packages:</b> React Router DOM 7.18.2, Axios 1.20.0, Lucide React 1.34.0.</li>
+    <li><b>Database Engine:</b> SQLite 3 (db.sqlite3 default local database; PostgreSQL-ready configuration).</li>
+    <li><b>Testing Framework:</b> pytest 8.3.3, pytest-django 4.9.0, pytest-cov 5.0.0.</li>
+    <li><b>Client Browser:</b> Microsoft Edge, Google Chrome, or Mozilla Firefox (modern Evergreen browsers).</li>
+  </ul>
+
+  <h2>1.4 DESCRIPTION OF TECHNOLOGY USED</h2>
+  <p>InsightFlow was engineered using a curated technology stack chosen specifically for stability, academic rigor, and modular decoupling:</p>
+  <ul>
+    <li><b>Python:</b> Python provides high readability, clean object-oriented architecture, and robust native data manipulation libraries ideal for building decoupled workflow and mathematical SLA calculation engines.</li>
+    <li><b>Django 4.2 LTS:</b> Django serves as the core web application backbone, delivering an enterprise-grade Object-Relational Mapper (ORM), secure database migrations, native password hashing (PBKDF2 SHA-256), and atomic transaction controls.</li>
+    <li><b>Django REST Framework:</b> DRF facilitates the development of clean, standardized RESTful endpoints with serializer-driven validation, consistent JSON response envelopes, object-level permission enforcement, and configurable rate throttling.</li>
+    <li><b>SimpleJWT:</b> SimpleJWT implements stateless token-based authorization. Access tokens (60-minute lifespan) and refresh tokens (7-day lifespan) permit decoupled client-server authentication without server-side session locks.</li>
+    <li><b>React 19:</b> React enables a responsive, component-driven user interface. Declarative state management and hooks (useState, useEffect, useContext) provide dynamic form rendering and instant UI feedback.</li>
+    <li><b>Vite 8:</b> Vite provides lightning-fast Hot Module Replacement (HMR) and optimized Rollup-based asset bundling for zero-latency development and efficient client delivery.</li>
+    <li><b>React Router DOM:</b> React Router DOM facilitates declarative, client-side route navigation with role-guarded route components (ProtectedRoute) that enforce client-side access control.</li>
+    <li><b>SQLite 3 Database:</b> SQLite 3 provides a lightweight, zero-configuration relational database engine embedded directly within the project repository (db.sqlite3). The application maintains full PostgreSQL compatibility via settings/base.py and psycopg2-binary.</li>
+  </ul>
+</div>
+
+<!-- ======================================================================= -->
+<!-- CHAPTER 2: PROPOSED SYSTEM -->
+<!-- ======================================================================= -->
+<div style="page-break-before: always;">
+  <h1>2. PROPOSED SYSTEM</h1>
+
+  <h2>2.1 FEASIBILITY STUDY</h2>
+  <p>Before system implementation, a comprehensive feasibility study was performed to assess the technical, economic, operational, and schedule viability of InsightFlow.</p>
+  <h3>Technical Feasibility</h3>
+  <p>The technical feasibility of InsightFlow is exceptionally high. The proposed architecture leverages proven, open-source technologies (Python, Django, React, Vite, SQLite). The application decouples business logic into pure Python services (WorkflowEngine and SLAEngine), removing hard HTTP dependencies and allowing the entire core to be verified via automated unit testing. The local SQLite 3 database eliminates external database server overhead during development and academic defense while retaining clean migration paths to PostgreSQL.</p>
+  <h3>Economic Feasibility</h3>
+  <p>InsightFlow was built entirely with zero-licensing open-source software libraries. Development and evaluation require only standard institutional computing hardware without commercial licenses or recurring cloud subscription fees. The project eliminates costly manual paperwork, physical filing overhead, and administrative tracing overhead, demonstrating clear economic feasibility.</p>
+  <h3>Operational Feasibility</h3>
+  <p>InsightFlow was designed with intuitive, role-specific interfaces tailored to student, staff, and administrative users. Students experience an intuitive 3-step wizard with real-time status badges and cryptographic verification slips; department staff manage a prioritized queue with single-click transitions; administrators gain clear telemetry matrices. Operational feasibility is validated by the elimination of informal email confusion and manual log tracing.</p>
+  <h3>Schedule Feasibility</h3>
+  <p>The project was executed across structured academic milestones spanning entity modeling, REST API construction, state machine validation, UI integration, security hardening, and test suite execution. All milestones were completed within the MCA Semester III academic schedule.</p>
+
+  <h2>2.2 USER REQUIREMENTS</h2>
+  <h3>Functional Requirements by User Role</h3>
+  <ul>
+    <li><b>FR-STD-01:</b> Authenticate using institutional credentials (email and password) to receive a secure JWT bearer token.</li>
+    <li><b>FR-STD-02:</b> Browse 8 institutional service areas and 42 service categories to discover required administrative services.</li>
+    <li><b>FR-STD-03:</b> Complete dynamic, schema-driven input forms with real-time field validation and optional file attachment upload.</li>
+    <li><b>FR-STD-04:</b> Track submitted requests via a visual progress stepper displaying current stage, elapsed dwell time, and SLA status.</li>
+    <li><b>FR-STD-05:</b> View and print an authentic Verification Digest Slip containing a tamper-evident SHA-256 cryptographic hash.</li>
+    <li><b>FR-STD-06:</b> Submit multi-metric Customer Satisfaction (CSAT) ratings (speed, helpfulness, clarity) upon terminal request resolution.</li>
+    <li><b>FR-STD-07:</b> Submit formal appeals with justification comments upon request rejection.</li>
+    <li><b>FR-STF-01:</b> Access a department-filtered operational queue displaying active requests prioritized by SLA urgency.</li>
+    <li><b>FR-STF-02:</b> Execute atomic stage transitions to legally allowed next stages with mandatory audit transition notes.</li>
+    <li><b>FR-STF-03:</b> Assign or reassign requests to qualified officers within the same department.</li>
+    <li><b>FR-STF-04:</b> Post internal staff-only notes and student-visible public remarks on active requests.</li>
+    <li><b>FR-ADM-01:</b> Monitor global institutional telemetry including active request volume, SLA compliance rates, and breach counts.</li>
+    <li><b>FR-ADM-02:</b> Evaluate the Department Health Matrix showing real-time compliance percentages across all 8 institutional units.</li>
+    <li><b>FR-ADM-03:</b> Analyze stage bottleneck dwell distributions to detect workflow congestion and operational latency.</li>
+    <li><b>FR-ADM-04:</b> Inspect the immutable, append-only AuditRecord ledger to review system-wide events and administrative actions.</li>
+    <li><b>FR-ADM-05:</b> Export historical institutional request records to CSV format for external academic recordkeeping.</li>
+  </ul>
+
+  <h3>Non-Functional Requirements</h3>
+  <ul>
+    <li><b>Security:</b> All API endpoints enforce JWT authentication with role-based permission classes and object-level department isolation.</li>
+    <li><b>Usability:</b> Single-page responsive design built with pure Vanilla CSS tokens, providing accessible contrast and intuitive navigation.</li>
+    <li><b>Reliability &amp; Data Integrity:</b> All database state transitions are executed within atomic database transactions (django.db.transaction.atomic) preventing partial updates.</li>
+    <li><b>Maintainability:</b> Modular Django application decomposition with pure Python service layers decoupled from HTTP transport objects.</li>
+    <li><b>Scalability:</b> Zero-install SQLite architecture engineered to scale to production PostgreSQL via environment variable configuration.</li>
+  </ul>
+</div>
+
+<!-- ======================================================================= -->
+<!-- CHAPTER 3: ANALYSIS AND DESIGN -->
+<!-- ======================================================================= -->
+<div style="page-break-before: always;">
+  <h1>3. ANALYSIS AND DESIGN</h1>
+
+  <h2>3.1 OBJECT DIAGRAM</h2>
+  <p>Figure 3.1 represents a genuine UML Object Diagram illustrating concrete runtime object instances and their memory links during an active request evaluation scenario. Unlike a class diagram which specifies abstract types, this diagram captures instantiated slot attribute values from the InsightFlow database, showing how a student request in the Academic Administration department interacts with user profiles, workflow stages, SLA configurations, stage history, assignments, and immutable audit logs.</p>
+  
+  <div class="figure-box">
+    <img src="file:///d:/MCA_MIT/SEM3/MINI Project/P1.InsightFlow_Full_Project/InsightFlow/docs/diagrams/object_diagram.jpg" />
+    <div class="caption">Figure 3.1: UML Object Diagram — Runtime Object Instances (Academic Re-evaluation Scenario)</div>
+  </div>
+  <p><b>Technical Verification &amp; Semantics:</b> The diagram conforms strictly to UML 2.5 object notation (underlined <code>instanceName : ClassName</code>). It captures concrete attributes: <code>student1 : User</code> (role='student'), <code>profile1 : StudentProfile</code> (roll='1272250642'), <code>req101 : ServiceRequest</code> (ref='REQ-2026-0042', status='in_progress'), <code>stage2 : WorkflowStage</code> (code='ACAD-REV', order=2), and <code>slaCfg2 : SLAConfiguration</code> (target=24.0h, warning=70%). Real instance links connect the request to its historical dwell record (duration=45m), assignment, and immutable audit entry.</p>
+
+  <h2>3.2 CLASS DIAGRAM</h2>
+  <p>Figure 3.2 depicts the structural UML Class Diagram representing the core domain classes of InsightFlow. Each class is modeled using standard 3-compartment UML notation detailing class names, typed attributes, and operations, along with associations and exact multiplicities.</p>
+  
+  <div class="figure-box">
+    <img src="file:///d:/MCA_MIT/SEM3/MINI Project/P1.InsightFlow_Full_Project/InsightFlow/docs/diagrams/class_diagram.jpg" />
+    <div class="caption">Figure 3.2: UML Class Diagram — InsightFlow Domain Software Architecture</div>
+  </div>
+  <p><b>Technical Verification &amp; Semantics:</b> Conforms to UML 2.5 Class Diagram standards. Depicts model relationships including 1:1 profile links (User to StudentProfile / StaffProfile), 1:N category and stage hierarchies, and 1:N request history logs. Illustrates authentic model methods including <code>elapsed_seconds_in_stage()</code>, <code>generate_verification_digest()</code>, <code>get_allowed_transitions()</code>, and <code>log_transition()</code>. The AuditRecord class is modeled as an immutable, append-only structure.</p>
+
+  <h2>3.3 USE CASE DIAGRAM</h2>
+  <p>Figure 3.3 presents the UML Use Case Diagram defining the system boundary and the interactions between authentic institutional actors (Student, Department Staff, and Administrator) and system use cases.</p>
+  
+  <div class="figure-box">
+    <img src="file:///d:/MCA_MIT/SEM3/MINI Project/P1.InsightFlow_Full_Project/InsightFlow/docs/diagrams/use_case_diagram.jpg" />
+    <div class="caption">Figure 3.3: UML Use Case Diagram — System Boundary and Role Capabilities</div>
+  </div>
+  <p><b>Technical Verification &amp; Semantics:</b> Conforms to UML 2.5 standards with stick-figure actors, horizontal use-case ovals, and a defined boundary rectangle. Strictly limited to implemented actors: Student (initiator and CSAT provider), Staff (queue processor and transition officer), and Administrator (governance and telemetry). Features the mandatory <code>&lt;&lt;include&gt;&gt;</code> relationship between 'Submit Service Request' and 'Fill Dynamic Category Schema'. No fictitious external ERP or SMS actors are included.</p>
+
+  <h2>3.4 SEQUENCE DIAGRAM</h2>
+  <p>Figure 3.4 models the chronological message exchange during the primary request creation lifecycle. It traces execution across participants: Student Actor, React Frontend SPA, REST API Controller, WorkflowEngine Service, SLAEngine Service, and the SQLite / Django ORM persistence layer.</p>
+  
+  <div class="figure-box">
+    <img src="file:///d:/MCA_MIT/SEM3/MINI Project/P1.InsightFlow_Full_Project/InsightFlow/docs/diagrams/sequence_diagram.jpg" />
+    <div class="caption">Figure 3.4: UML Sequence Diagram — Student Request Creation &amp; Stage Initialization</div>
+  </div>
+  <p><b>Technical Verification &amp; Semantics:</b> Conforms to UML 2.5 Sequence Diagram notation. Features vertical lifelines, activation execution bars, synchronous call arrows, and dashed return messages. Illustrates the atomic transaction wrapping ServiceRequest creation, initial RequestStageHistory entry creation, AuditRecord creation, synchronous SLAEngine calculation, and the final HTTP 201 response containing the reference number and verification digest.</p>
+
+  <h2>3.5 ACTIVITY DIAGRAM</h2>
+  <p>Figure 3.5 illustrates the UML Activity Diagram modeling the end-to-end business process workflow for institutional service requests, partitioned across Student, InsightFlow Core Engine, and Staff Officer swimlanes.</p>
+  
+  <div class="figure-box">
+    <img src="file:///d:/MCA_MIT/SEM3/MINI Project/P1.InsightFlow_Full_Project/InsightFlow/docs/diagrams/activity_diagram.jpg" />
+    <div class="caption">Figure 3.5: UML Activity Diagram — Service Request Lifecycle Business Process</div>
+  </div>
+  <p><b>Technical Verification &amp; Semantics:</b> Conforms to UML 2.5 Activity Diagram notation. Features solid black initial circle, rounded activity states, formal diamond decision gates with explicit guard conditions ([Valid Data], [Validation Error], [Meets Criteria], [Fails Criteria]), merge nodes, and a standard bullseye final node. Captures first-class rejection paths (<code>is_rejection=True</code>), automated SLA dwell closing, and post-resolution CSAT rating collection.</p>
+
+  <h2>3.6 MODULE HIERARCHY DIAGRAM</h2>
+  <p>Figure 3.6 provides a structural software module decomposition of InsightFlow, demonstrating the modular hierarchy across Presentation, Application &amp; API, and Data Persistence tiers.</p>
+  
+  <div class="figure-box">
+    <img src="file:///d:/MCA_MIT/SEM3/MINI Project/P1.InsightFlow_Full_Project/InsightFlow/docs/diagrams/module_hierarchy_diagram.jpg" />
+    <div class="caption">Figure 3.6: Software Module Hierarchy &amp; Architectural Decomposition Diagram</div>
+  </div>
+  <p><b>Technical Verification &amp; Semantics:</b> Conforms to software architecture decomposition standards. Deconstructs the React 19 frontend into Auth, Student, Staff, Admin, and Shared submodules; deconstructs the Django 4.2 backend into Core Engines, Security Gateways, and Domain Django Apps; and details the 18-table persistence layer.</p>
+
+  <h2>3.7 USER INTERFACE DESIGN (SCREENS ETC.)</h2>
+  <p>InsightFlow's user interface was constructed following rigorous usability principles designed for high institutional efficiency:</p>
+  <ul>
+    <li><b>Role-Governed Layouts:</b> The navigation bar and workspace layouts adapt dynamically to the authenticated user's role (Student, Staff, or Admin), preventing interface clutter.</li>
+    <li><b>Status &amp; SLA Visibility:</b> Requests display consistent color-coded risk and status badges (e.g., green for safe, amber for warning, red for critical/breached), ensuring instant situational awareness.</li>
+    <li><b>Schema-Driven Forms:</b> Service requests dynamically render form controls (text, number, date, select) based on the database schema of the selected category.</li>
+    <li><b>State Feedback &amp; Resilience:</b> All interactive buttons feature disabled loading states during network mutations, accompanied by clear modal confirmations for critical transitions.</li>
+  </ul>
+
+  <h2>3.8 TABLE SPECIFICATIONS &amp; CHEN ER DIAGRAM</h2>
+  <p>Figure 3.8.1 represents the authentic Entity-Relationship (ER) Diagram of the InsightFlow database, modeled strictly in Chen ER notation.</p>
+  
+  <div class="figure-box">
+    <img src="file:///d:/MCA_MIT/SEM3/MINI Project/P1.InsightFlow_Full_Project/InsightFlow/docs/diagrams/er_diagram_chen.jpg" />
+    <div class="caption">Figure 3.8.1: Entity–Relationship (ER) Diagram in Strict Chen Notation</div>
+  </div>
+  <p><b>Technical Verification &amp; Chen Notation Rules:</b> Rectangles represent entities (USER, STUDENT_PROFILE, STAFF_PROFILE, DEPARTMENT, WORKFLOW_DEFINITION, WORKFLOW_STAGE, SLA_CONFIG, SERVICE_CATEGORY, DYNAMIC_FIELD, SERVICE_REQUEST, STAGE_HISTORY, AUDIT_RECORD, ASSIGNMENT, COMMENT, NOTIFICATION); ovals represent attributes with underlined primary keys; diamonds represent database relationships; and cardinalities (1:1, 1:N, M:N) reflect exact foreign key constraints. No UML class syntax is mixed into this ER diagram.</p>
+
+  <h3>Database Entity Specifications</h3>
+  <p><b>Table 3.8.1: accounts_user (Custom User Authentication Model)</b></p>
+  <table>
+    <thead><tr><th>Field Name</th><th>Data Type</th><th>Key</th><th>Null</th><th>Default</th><th>Description</th></tr></thead>
+    <tbody>
+      <tr><td>id</td><td>UUID</td><td>PK</td><td>No</td><td>uuid4()</td><td>Unique primary identifier</td></tr>
+      <tr><td>email</td><td>EmailField(255)</td><td>Unique</td><td>No</td><td>-</td><td>Institutional login email</td></tr>
+      <tr><td>full_name</td><td>CharField(150)</td><td>-</td><td>No</td><td>-</td><td>Official full user name</td></tr>
+      <tr><td>role</td><td>CharField(20)</td><td>-</td><td>No</td><td>'student'</td><td>Enum: student, staff, admin</td></tr>
+      <tr><td>is_staff</td><td>BooleanField</td><td>-</td><td>No</td><td>False</td><td>Django admin portal access flag</td></tr>
+      <tr><td>is_active</td><td>BooleanField</td><td>-</td><td>No</td><td>True</td><td>Active account authorization status</td></tr>
+    </tbody>
+  </table>
+
+  <p><b>Table 3.8.2: service_requests (Central Workflow Transaction Ledger)</b></p>
+  <table>
+    <thead><tr><th>Field Name</th><th>Data Type</th><th>Key</th><th>Null</th><th>Default</th><th>Description</th></tr></thead>
+    <tbody>
+      <tr><td>id</td><td>UUID</td><td>PK</td><td>No</td><td>uuid4()</td><td>Unique primary identifier</td></tr>
+      <tr><td>reference_number</td><td>CharField(32)</td><td>Unique</td><td>No</td><td>REQ-YYYY-XXXX</td><td>Institutional tracking code</td></tr>
+      <tr><td>student_id</td><td>UUID</td><td>FK</td><td>No</td><td>-</td><td>Foreign key to accounts_user</td></tr>
+      <tr><td>service_category_id</td><td>UUID</td><td>FK</td><td>No</td><td>-</td><td>Foreign key to services_category</td></tr>
+      <tr><td>current_stage_id</td><td>UUID</td><td>FK</td><td>Yes</td><td>NULL</td><td>Foreign key to workflows_stage</td></tr>
+      <tr><td>priority</td><td>CharField(10)</td><td>-</td><td>No</td><td>'medium'</td><td>Enum: low, medium, high, critical</td></tr>
+      <tr><td>status</td><td>CharField(20)</td><td>-</td><td>No</td><td>'open'</td><td>Enum: open, in_progress, resolved..</td></tr>
+    </tbody>
+  </table>
+
+  <p><b>Table 3.8.3: audit_records (Immutable Append-Only Audit Ledger)</b></p>
+  <table>
+    <thead><tr><th>Field Name</th><th>Data Type</th><th>Key</th><th>Null</th><th>Default</th><th>Description</th></tr></thead>
+    <tbody>
+      <tr><td>id</td><td>UUID</td><td>PK</td><td>No</td><td>uuid4()</td><td>Unique primary identifier</td></tr>
+      <tr><td>request_id</td><td>UUID</td><td>FK</td><td>No</td><td>-</td><td>Foreign key to service_requests</td></tr>
+      <tr><td>actor_id</td><td>UUID</td><td>FK</td><td>Yes</td><td>NULL</td><td>Foreign key to accounts_user</td></tr>
+      <tr><td>action</td><td>CharField(50)</td><td>-</td><td>No</td><td>-</td><td>Enum: REQUEST_CREATED, STAGE_TRANSITION..</td></tr>
+      <tr><td>description</td><td>TextField</td><td>-</td><td>No</td><td>-</td><td>Human-readable event narrative</td></tr>
+      <tr><td>timestamp</td><td>DateTimeField</td><td>-</td><td>No</td><td>now()</td><td>Immutable creation timestamp</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- ======================================================================= -->
+<!-- CHAPTER 4: INPUT AND OUTPUT SCREENS -->
+<!-- ======================================================================= -->
+<div style="page-break-before: always;">
+  <h1>4. INPUT AND OUTPUT SCREENS</h1>
+  <p>This section documents the actual user interfaces captured from the running InsightFlow application. Each screen demonstrates genuine implementation features, role-based workflows, and real-time operational feedback.</p>
+
+  <h2>4.1 Institutional Authentication Screen</h2>
+  <div class="figure-box">
+    <img src="file:///d:/MCA_MIT/SEM3/MINI Project/P1.InsightFlow_Full_Project/InsightFlow/docs/screenshots/screen_login.png" />
+    <div class="caption">Figure 4.1: InsightFlow Institutional Authentication Interface</div>
+  </div>
+  <p><b>Interface Narrative:</b> The entry portal for all institutional actors. Provides single-screen authentication without public registration.</p>
+  <ul>
+    <li><b>Input Provided:</b> Institutional Email Address and Password.</li>
+    <li><b>Processing &amp; Logic:</b> Backend validates credentials, verifies active status, issues JWT access/refresh tokens, and updates last_login timestamp.</li>
+    <li><b>Output Displayed:</b> Session initialization with redirection to role-specific workspace (/student/requests, /staff/queue, or /admin/dashboard).</li>
+  </ul>
+
+  <h2>4.2 Student Workspace &amp; Active Request Tracking</h2>
+  <div class="figure-box">
+    <img src="file:///d:/MCA_MIT/SEM3/MINI Project/P1.InsightFlow_Full_Project/InsightFlow/docs/screenshots/screen_student_dashboard.png" />
+    <div class="caption">Figure 4.2: Student Request Tracking Dashboard</div>
+  </div>
+  <p><b>Interface Narrative:</b> Primary workspace for students to view active and resolved requests, SLA urgency, and quick links to submit new requests.</p>
+  <ul>
+    <li><b>Input Provided:</b> Filter selection by status, priority, or search query.</li>
+    <li><b>Processing &amp; Logic:</b> Client queries GET /api/v1/requests/, computes active counts, and binds live stage progress.</li>
+    <li><b>Output Displayed:</b> Summary metric cards (Total, In Progress, Resolved), color-coded SLA badges, reference numbers, and current workflow stages.</li>
+  </ul>
+
+  <h2>4.3 Request Detail, Verification Digest &amp; Timeline</h2>
+  <div class="figure-box">
+    <img src="file:///d:/MCA_MIT/SEM3/MINI Project/P1.InsightFlow_Full_Project/InsightFlow/docs/screenshots/screen_request_detail.png" />
+    <div class="caption">Figure 4.3: Request Detail &amp; Progress Stepper Console</div>
+  </div>
+  <p><b>Interface Narrative:</b> Comprehensive request view featuring the visual workflow stage stepper, dynamic field metadata, and cryptographic verification digest slip.</p>
+  <ul>
+    <li><b>Input Provided:</b> Public student comment submission, file attachment upload, or CSAT feedback rating.</li>
+    <li><b>Processing &amp; Logic:</b> Server aggregates stage dwell records, generates SHA-256 digest (VER-XXXXXXXX), and compiles audit timeline.</li>
+    <li><b>Output Displayed:</b> Visual progress stepper, printable official verification slip, chronological audit timeline, and staff remarks.</li>
+  </ul>
+
+  <h2>4.4 Staff Workflow Processing &amp; Stage Transition Console</h2>
+  <div class="figure-box">
+    <img src="file:///d:/MCA_MIT/SEM3/MINI Project/P1.InsightFlow_Full_Project/InsightFlow/docs/screenshots/screen_staff_process.png" />
+    <div class="caption">Figure 4.4: Staff Request Processing &amp; Transition Console</div>
+  </div>
+  <p><b>Interface Narrative:</b> Dedicated workspace for department staff officers to evaluate requests, execute stage transitions, and manage assignments.</p>
+  <ul>
+    <li><b>Input Provided:</b> Target stage selection, transition note, internal staff remark, or assignment delegation.</li>
+    <li><b>Processing &amp; Logic:</b> Backend validates transition legality via WorkflowEngine.can_transition(), executes atomic database update, and logs audit record.</li>
+    <li><b>Output Displayed:</b> Dynamic transition action buttons, current SLA countdown timer, dwell progress bar, and assignment status.</li>
+  </ul>
+
+  <h2>4.5 Institutional Governance &amp; Executive Telemetry</h2>
+  <div class="figure-box">
+    <img src="file:///d:/MCA_MIT/SEM3/MINI Project/P1.InsightFlow_Full_Project/InsightFlow/docs/screenshots/screen_admin_dashboard.png" />
+    <div class="caption">Figure 4.5: Administrator Institutional Governance Dashboard</div>
+  </div>
+  <p><b>Interface Narrative:</b> Global governance dashboard for institutional leadership, displaying real-time compliance metrics and volume telemetry.</p>
+  <ul>
+    <li><b>Input Provided:</b> Date range selection, department filtering, and CSV export triggers.</li>
+    <li><b>Processing &amp; Logic:</b> Server aggregates database records across all departments, computing global SLA compliance percentage and active queue counts.</li>
+    <li><b>Output Displayed:</b> Executive KPI cards (System Compliance Rate, Breached Requests, Active Workload), and department health indicators.</li>
+  </ul>
+
+  <h2>4.6 Departmental Service Health &amp; SLA Compliance Matrix</h2>
+  <div class="figure-box">
+    <img src="file:///d:/MCA_MIT/SEM3/MINI Project/P1.InsightFlow_Full_Project/InsightFlow/docs/screenshots/screen_admin_department_health.png" />
+    <div class="caption">Figure 4.6: Administrator Department Health Matrix</div>
+  </div>
+  <p><b>Interface Narrative:</b> Comparative matrix evaluating service delivery health across all 8 academic and administrative departments.</p>
+  <ul>
+    <li><b>Input Provided:</b> Department selection and sorting criteria.</li>
+    <li><b>Processing &amp; Logic:</b> SLAEngine compiles department-level compliance rates, breach counts, and active queues.</li>
+    <li><b>Output Displayed:</b> Tabular compliance matrix showing on-time percentages, breach counts, and active queues across ACAD, EXAM, FIN, IT, LIB, etc.</li>
+  </ul>
+</div>
+
+<!-- ======================================================================= -->
+<!-- CHAPTER 5: TEST PROCEDURES AND IMPLEMENTATION -->
+<!-- ======================================================================= -->
+<div style="page-break-before: always;">
+  <h1>5. TEST PROCEDURES AND IMPLEMENTATION</h1>
+
+  <h2>5.1 TEST METHODOLOGY &amp; EXECUTION SUMMARY</h2>
+  <p>InsightFlow was subjected to automated unit, integration, and security testing using pytest and pytest-django. The test suite is organized into 6 specialized test modules executing against an isolated test database:</p>
+  <ul>
+    <li><b>1. API Layer (tests/test_api_v1.py):</b> CRUD operations, role-based endpoint protection, admin analytics, and notification dispatch.</li>
+    <li><b>2. CSAT &amp; Intelligence (tests/test_csat_predictive_erp.py):</b> Multi-metric CSAT feedback submission, predictive dwell calculations, ERP profile generation, and CSV export.</li>
+    <li><b>3. Security &amp; Hardening (tests/test_hardening_security.py):</b> Object-level department isolation, secure attachment upload/download RBAC, and system health check probes.</li>
+    <li><b>4. Permissions (tests/test_permissions.py):</b> JWT authentication enforcement, role guards, and standardized JSON response envelope consistency.</li>
+    <li><b>5. Request Lifecycle (tests/test_requests.py):</b> Atomic request initialization, reference number generation, stage history tracking, and rejection handling.</li>
+    <li><b>6. Workflow State Machine (tests/test_workflows.py):</b> Workflow versioning, stage topology, allowed transitions, and SLA threshold configurations.</li>
+  </ul>
+
+  <p><b>Test Execution Benchmark:</b></p>
+  <ul>
+    <li><b>Tests Executed:</b> 115 passed, 0 failed, 0 skipped (100% pass rate).</li>
+    <li><b>Execution Duration:</b> 105.80 seconds.</li>
+    <li><b>Test Runner:</b> pytest 8.3.3 with pytest-django 4.9.0.</li>
+  </ul>
+
+  <h2>5.2 DETAILED TEST CASES TABLE</h2>
+  <p>Table 5.1 details 15 representative automated test cases verifying security, workflow integrity, and deterministic SLA calculations:</p>
+  <table>
+    <thead><tr><th>Test ID</th><th>Test Scenario</th><th>Input Data</th><th>Expected Result</th><th>Actual Result</th><th>Status</th></tr></thead>
+    <tbody>
+      <tr><td>TC-AUTH-01</td><td>JWT Login Valid</td><td>student1@insightflow.local</td><td>HTTP 200 + access/refresh tokens</td><td>Tokens returned successfully</td><td style="color: #16a34a; font-weight: bold;">PASS</td></tr>
+      <tr><td>TC-AUTH-02</td><td>JWT Login Invalid</td><td>student1 + wrong_pwd</td><td>HTTP 401 Unauthorized</td><td>Rejected with error envelope</td><td style="color: #16a34a; font-weight: bold;">PASS</td></tr>
+      <tr><td>TC-RBAC-01</td><td>Student View Other Req</td><td>Student2 accesses Req of Student1</td><td>HTTP 404 / 403 Forbidden</td><td>Denied object-level access</td><td style="color: #16a34a; font-weight: bold;">PASS</td></tr>
+      <tr><td>TC-RBAC-02</td><td>Cross-Dept Staff Access</td><td>FIN staff transitions ACAD req</td><td>HTTP 403 Forbidden</td><td>Denied by department isolation</td><td style="color: #16a34a; font-weight: bold;">PASS</td></tr>
+      <tr><td>TC-WF-01</td><td>Valid Forward Transition</td><td>Transition Submitted -> Under Review</td><td>HTTP 200 + stage updated</td><td>Atomic update + audit logged</td><td style="color: #16a34a; font-weight: bold;">PASS</td></tr>
+      <tr><td>TC-WF-02</td><td>Illegal Stage Jump</td><td>Transition Submitted -> Issued</td><td>WorkflowValidationError</td><td>Rejected: illegal transition</td><td style="color: #16a34a; font-weight: bold;">PASS</td></tr>
+      <tr><td>TC-WF-03</td><td>Rejection Transition</td><td>Transition Under Review -> Rejected</td><td>Status='rejected' + terminal</td><td>Terminal rejection enforced</td><td style="color: #16a34a; font-weight: bold;">PASS</td></tr>
+      <tr><td>TC-WF-04</td><td>Terminal Transition</td><td>Transition on resolved request</td><td>WorkflowValidationError</td><td>Terminal requests immutable</td><td style="color: #16a34a; font-weight: bold;">PASS</td></tr>
+      <tr><td>TC-SLA-01</td><td>SLA Normal Threshold</td><td>Elapsed: 2h / Target: 24h</td><td>Risk level: 'safe'</td><td>Risk computed as 'safe'</td><td style="color: #16a34a; font-weight: bold;">PASS</td></tr>
+      <tr><td>TC-SLA-02</td><td>SLA Warning Threshold</td><td>Elapsed: 18h / Target: 24h (75%)</td><td>Risk level: 'warning'</td><td>Warning risk triggered</td><td style="color: #16a34a; font-weight: bold;">PASS</td></tr>
+      <tr><td>TC-SLA-03</td><td>SLA Critical Threshold</td><td>Elapsed: 22h / Target: 24h (91%)</td><td>Risk level: 'critical'</td><td>Critical risk triggered</td><td style="color: #16a34a; font-weight: bold;">PASS</td></tr>
+      <tr><td>TC-SLA-04</td><td>SLA Breach Detection</td><td>Elapsed: 26h / Target: 24h</td><td>Risk level: 'breached'</td><td>Breached status flagged</td><td style="color: #16a34a; font-weight: bold;">PASS</td></tr>
+      <tr><td>TC-SEC-01</td><td>Attachment RBAC Check</td><td>Unauthorized student downloads file</td><td>HTTP 403 Forbidden</td><td>Protected file download denied</td><td style="color: #16a34a; font-weight: bold;">PASS</td></tr>
+      <tr><td>TC-CSAT-01</td><td>Post-Resolution Rating</td><td>Student submits 5-star rating</td><td>HTTP 201 Created</td><td>Feedback record stored</td><td style="color: #16a34a; font-weight: bold;">PASS</td></tr>
+      <tr><td>TC-CSAT-02</td><td>Prevent Active Rating</td><td>Feedback submitted on active req</td><td>HTTP 400 Bad Request</td><td>Prevented rating active item</td><td style="color: #16a34a; font-weight: bold;">PASS</td></tr>
+    </tbody>
+  </table>
+
+  <h2>5.3 IMPLEMENTATION DETAILS</h2>
+  <p>InsightFlow was implemented using clean layered separation of concerns:</p>
+  <ul>
+    <li><b>Service Layer:</b> Pure Python services (WorkflowEngine, SLAEngine, PredictiveEngine) encapsulate business logic independently of Django HTTP controllers.</li>
+    <li><b>Atomic Transactions:</b> All database writes modifying stage positions execute inside django.db.transaction.atomic() context managers, ensuring that RequestStageHistory closures and AuditRecord inserts commit together.</li>
+    <li><b>API Consistency:</b> Standardized custom exception handler formats all client responses into a uniform envelope: <code>&#123;success: bool, data: &#123;...&#125;, error: &#123;...&#125;&#125;</code>.</li>
+  </ul>
+</div>
+
+<!-- ======================================================================= -->
+<!-- CHAPTER 6: SAMPLE CODE -->
+<!-- ======================================================================= -->
+<div style="page-break-before: always;">
+  <h1>6. SAMPLE CODE</h1>
+  <p>This section presents 5 authentic code excerpts from the final InsightFlow repository, illustrating key architectural components:</p>
+
+  <h2>6.1 Atomic Workflow Transition Logic (core/workflow_engine.py)</h2>
+  <p>The WorkflowEngine encapsulates atomic lifecycle transitions, closing previous stage duration history and recording immutable audit entries:</p>
+  <pre>@transaction.atomic
+def execute_transition(self, service_request, target_stage, actor, note=""):
+    # 1. Validate legality
+    can_move, reason = self.can_transition(service_request, target_stage, actor)
+    if not can_move:
+        raise WorkflowValidationError(reason)
+
+    old_stage = service_request.current_stage
+    now = timezone.now()
+
+    # 2. Close current stage history
+    current_history = service_request.stage_history.filter(exited_at__isnull=True).first()
+    if current_history:
+        current_history.exited_at = now
+        dwell_secs = (now - current_history.entered_at).total_seconds()
+        current_history.duration_minutes = round(dwell_secs / 60)
+        current_history.save()
+
+    # 3. Update ServiceRequest
+    service_request.current_stage = target_stage
+    service_request.stage_entered_at = now
+    if target_stage.is_terminal:
+        service_request.status = 'rejected' if target_stage.is_rejection else 'resolved'
+        service_request.resolved_at = now
+    else:
+        service_request.status = 'in_progress'
+    service_request.save()
+
+    # 4. Create new stage history &amp; immutable audit record
+    RequestStageHistory.objects.create(request=service_request, stage=target_stage, entered_at=now, transitioned_by=actor)
+    AuditRecord.objects.create(request=service_request, actor=actor, action='STAGE_TRANSITION',
+                               description=f'Moved to {target_stage.name}', is_student_visible=True)
+    return service_request</pre>
+  <p><b>Significance:</b> Enforces transactional atomicity and append-only governance, ensuring that request state, dwell history, and audit records never drift out of sync.</p>
+
+  <h2>6.2 Deterministic SLA &amp; Health Calculation (core/sla_engine.py)</h2>
+  <p>The SLAEngine performs mathematical evaluation of stage dwell times against configured SLA thresholds:</p>
+  <pre>def compute_stage_sla(self, service_request) -> SLAResult:
+    stage = service_request.current_stage
+    sla_config = stage.sla_config
+
+    elapsed_minutes = (timezone.now() - service_request.stage_entered_at).total_seconds() / 60
+    target_minutes = float(sla_config.target_hours) * 60
+    elapsed_pct = (elapsed_minutes / target_minutes * 100) if target_minutes > 0 else 0
+
+    warn_pct = sla_config.warning_threshold_pct
+    crit_pct = sla_config.critical_threshold_pct
+
+    if elapsed_pct &lt; warn_pct:
+        risk = 'safe'
+    elif elapsed_pct &lt; crit_pct:
+        risk = 'warning'
+    elif elapsed_pct &lt; 100:
+        risk = 'critical'
+    else:
+        risk = 'breached'
+
+    return SLAResult(risk_level=risk, elapsed_minutes=elapsed_minutes,
+                     target_minutes=target_minutes, elapsed_pct=elapsed_pct)</pre>
+  <p><b>Significance:</b> Eliminates black-box opacity by computing deterministic SLA risk levels directly from configured thresholds and actual database timestamps.</p>
+
+  <h2>6.3 Cryptographic Verification Digest Generator (core/erp_service.py)</h2>
+  <p>Produces a tamper-evident SHA-256 verification hash used on printed official acknowledgment slips:</p>
+  <pre>@classmethod
+def generate_verification_digest(cls, service_request) -> dict:
+    raw_token = f'{service_request.id}:{service_request.reference_number}:{service_request.student.email}:{service_request.created_at.isoformat()}'
+    sha256_hash = hashlib.sha256(raw_token.encode('utf-8')).hexdigest()
+
+    return {
+        'verification_code': f'VER-{sha256_hash[:8].upper()}-{sha256_hash[8:16].upper()}',
+        'full_hash': sha256_hash,
+        'issuer': 'MIT World Peace University — InsightFlow Institutional Governance Hub',
+        'timestamp': timezone.now().isoformat(),
+        'verified_status': service_request.status.upper(),
+    }</pre>
+  <p><b>Significance:</b> Implements tamper-evident verification for printed academic slips without external certificate authority dependencies. Correctly documented as a cryptographic hash digest, not encryption.</p>
+
+  <h2>6.4 JWT Settings &amp; Rate Throttling (insightflow/settings/base.py)</h2>
+  <p>Configures stateless token security, token rotation, and API rate limiting:</p>
+  <pre>REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ],
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',
+    ],
+    'DEFAULT_PAGINATION_CLASS': 'core.pagination.StandardPagination',
+    'PAGE_SIZE': 20,
+    'EXCEPTION_HANDLER': 'core.exceptions.custom_exception_handler',
+    'DEFAULT_THROTTLE_CLASSES': [
+        'rest_framework.throttling.AnonRateThrottle',
+        'rest_framework.throttling.UserRateThrottle',
+    ],
+    'DEFAULT_THROTTLE_RATES': {
+        'anon': '30/min',
+        'user': '200/min',
+        'login': '10/min',
+    },
+}</pre>
+  <p><b>Significance:</b> Enforces defensive API throttling against denial-of-service and credential brute-force attacks.</p>
+
+  <h2>6.5 Dynamic Form Rendering Hook (frontend/src/pages/student/NewRequestWizard.jsx)</h2>
+  <p>Renders category-specific dynamic form fields received from the backend schema API:</p>
+  <pre>{selectedCategory?.dynamic_fields?.map((field) => (
+  &lt;div key={field.id} className="form-group"&gt;
+    &lt;label className="form-label"&gt;
+      {field.field_label} {field.is_required &amp;&amp; &lt;span className="text-danger"&gt;*&lt;/span&gt;}
+    &lt;/label&gt;
+    {field.field_type === 'select' ? (
+      &lt;select className="form-select" value={dynamicValues[field.field_key] || ''}
+              onChange={(e) => setDynamicValues({...dynamicValues, [field.field_key]: e.target.value})}&gt;
+        &lt;option value=""&gt;Select option...&lt;/option&gt;
+        {field.options_json?.map(opt => &lt;option key={opt} value={opt}&gt;{opt}&lt;/option&gt;)}
+      &lt;/select&gt;
+    ) : (
+      &lt;input type={field.field_type} className="form-input"
+             placeholder={field.placeholder || ''}
+             value={dynamicValues[field.field_key] || ''}
+             onChange={(e) => setDynamicValues({...dynamicValues, [field.field_key]: e.target.value})} /&gt;
+    )}
+  &lt;/div&gt;
+))}</pre>
+  <p><b>Significance:</b> Eliminates static hardcoded forms by rendering schema-driven inputs dynamically according to administrative catalog configurations.</p>
+</div>
+
+<!-- ======================================================================= -->
+<!-- CHAPTER 7: LIMITATIONS -->
+<!-- ======================================================================= -->
+<div style="page-break-before: always;">
+  <h1>7. LIMITATIONS</h1>
+  <p>In accordance with academic integrity and rigorous engineering practices, the verified limitations of the current InsightFlow implementation are explicitly stated:</p>
+  <ul>
+    <li><b>Local Database Scope:</b> The current active database is SQLite 3 (db.sqlite3). While suitable for academic development, evaluation, and single-host demonstration, enterprise production concurrency requires activating the configured PostgreSQL database backend.</li>
+    <li><b>Polling-Based Notifications:</b> In-app alerts are delivered via client-side interval polling rather than persistent full-duplex WebSocket connections (e.g., Django Channels).</li>
+    <li><b>Deterministic Predictive Heuristics:</b> SLA risk scoring and completion forecasts utilize deterministic dwell velocity heuristics and queue congestion multipliers rather than trained machine learning models, as historical multi-year university dataset training was outside the semester project timeline.</li>
+    <li><b>Simulated Campus ERP Integration:</b> The Campus ERP / Student Information System integration is implemented as an internal simulation service (ERPIntegrationService) rather than a live network socket connected to a proprietary university ERP database.</li>
+    <li><b>Local Evaluation Environment:</b> Performance evaluation was conducted in local development environments. High-volume stress testing under thousands of concurrent requests was not performed.</li>
+  </ul>
+</div>
+
+<!-- ======================================================================= -->
+<!-- CHAPTER 8: FUTURE SCOPE -->
+<!-- ======================================================================= -->
+<div style="page-break-before: always;">
+  <h1>8. FUTURE SCOPE</h1>
+  <p>InsightFlow was designed with an extensible modular architecture that facilitates straightforward expansion into an enterprise institutional platform:</p>
+  <ul>
+    <li><b>Machine Learning Predictive Modeling:</b> Collect multi-semester institutional request telemetry to train Random Forest or Gradient Boosting regression models capable of predicting SLA breach probabilities based on seasonal academic calendar peaks.</li>
+    <li><b>Full-Duplex WebSockets &amp; External Relays:</b> Integrate Django Channels and Redis to provide real-time WebSocket push notifications to connected student and staff browsers, coupled with SMS (Twilio) and institutional SMTP relays.</li>
+    <li><b>Live Enterprise SIS Connectors:</b> Establish secure bi-directional RESTful integrations with live university ERP systems (e.g., SAP, Ellucian Banner, or Peoplesoft) to automatically sync fee clearance and grade database entries.</li>
+    <li><b>Containerization &amp; Cloud Kubernetes:</b> Package backend and frontend services into containerized Docker images orchestrated with Kubernetes for automated scaling and zero-downtime rolling updates on institutional cloud infrastructure.</li>
+    <li><b>Native Mobile Application:</b> Develop cross-platform native mobile applications using React Native to allow students to receive push notifications and upload photos of physical documents directly from smartphone cameras.</li>
+  </ul>
+</div>
+
+<!-- ======================================================================= -->
+<!-- CHAPTER 9: CONCLUSION -->
+<!-- ======================================================================= -->
+<div style="page-break-before: always;">
+  <h1>9. CONCLUSION</h1>
+  <p>The InsightFlow platform successfully addresses the pervasive challenges of fragmented, opaque, and unmonitored service requests within university administration. By combining a modern, responsive React single-page frontend with an enterprise-grade Django REST Framework backend, the system centralizes administrative request intake across 8 major university departments, 42 catalog services, and 3 formal workflow definitions.</p>
+  <p>The engineering design emphasizes transparency and accountability. The implementation of pure Python workflow and SLA engines guarantees atomic state transitions, accurate dwell velocity tracking, deterministic warning/critical SLA breach thresholds, and an immutable append-only audit trail. System security is reinforced through JWT authentication, role guards, object-level department isolation, and rate throttling policies.</p>
+  <p>The technical integrity of InsightFlow is demonstrated through its automated test suite, achieving 115 passing tests across API, security, permission, and workflow modules with zero failures. In summary, InsightFlow satisfies all academic criteria prescribed for the MCA Semester III Mini Project (LCA 3) at Dr. Vishwanath Karad MIT World Peace University, Pune, delivering an authentic, robust, and defensible software solution for institutional workflow governance.</p>
+</div>
+
+<!-- ======================================================================= -->
+<!-- CHAPTER 10: REFERENCES -->
+<!-- ======================================================================= -->
+<div style="page-break-before: always;">
+  <h1>10. REFERENCES</h1>
+  <p>The technical architecture and implementation of InsightFlow are supported by the following official academic standards and technical documentations:</p>
+  <ul>
+    <li><b>[1] Python Software Foundation:</b> 'Python 3.12 Documentation and Language Reference', <a href="https://docs.python.org/3/">https://docs.python.org/3/</a> (2024).</li>
+    <li><b>[2] Django Software Foundation:</b> 'Django 4.2 LTS Documentation: The Web Framework for Perfectionists with Deadlines', <a href="https://docs.djangoproject.com/en/4.2/">https://docs.djangoproject.com/en/4.2/</a> (2024).</li>
+    <li><b>[3] Django REST Framework Documentation:</b> 'REST Framework 3.15 API Guide: Serializers, Views, and Permissions', <a href="https://www.django-rest-framework.org/">https://www.django-rest-framework.org/</a> (2024).</li>
+    <li><b>[4] SimpleJWT Documentation:</b> 'JSON Web Token Authentication for Django REST Framework', <a href="https://django-rest-framework-simplejwt.readthedocs.io/">https://django-rest-framework-simplejwt.readthedocs.io/</a> (2024).</li>
+    <li><b>[5] Meta Open Source:</b> 'React 19 Documentation: Declarative Component Architecture and Hooks', <a href="https://react.dev/">https://react.dev/</a> (2024).</li>
+    <li><b>[6] Evan You et al.:</b> 'Vite: Next Generation Frontend Tooling Reference Guide', <a href="https://vitejs.dev/">https://vitejs.dev/</a> (2024).</li>
+    <li><b>[7] React Router Documentation:</b> 'React Router DOM v7: Client-Side Routing and Route Guards', <a href="https://reactrouter.com/">https://reactrouter.com/</a> (2024).</li>
+    <li><b>[8] SQLite Development Team:</b> 'SQLite 3 Architecture, File Format, and ACID Transaction Principles', <a href="https://www.sqlite.org/docs.html">https://www.sqlite.org/docs.html</a> (2024).</li>
+    <li><b>[9] Object Management Group (OMG):</b> 'Unified Modeling Language (OMG UML) Superstructure Specification, Version 2.5.1', OMG Document formal/2017-12-05 (2017).</li>
+    <li><b>[10] Peter Pin-Shan Chen:</b> 'The Entity-Relationship Model—Toward a Unified View of Data', ACM Transactions on Database Systems (TODS), Vol. 1, No. 1, pp. 9–36 (1976).</li>
+  </ul>
+</div>
+
+</body>
+</html>

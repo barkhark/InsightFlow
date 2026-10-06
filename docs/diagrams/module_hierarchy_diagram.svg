@@ -1,0 +1,168 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1250" width="1600" height="1250" style="background:#ffffff; font-family:'Segoe UI', Arial, sans-serif;">
+  <defs>
+    <filter id="shadow" x="-5%" y="-5%" width="110%" height="110%">
+      <feDropShadow dx="2" dy="2" stdDeviation="2" flood-color="#000000" flood-opacity="0.10"/>
+    </filter>
+  </defs>
+
+  <!-- Header -->
+  <rect x="0" y="0" width="1600" height="70" fill="#0f172a"/>
+  <text x="800" y="42" fill="#ffffff" font-size="22" font-weight="bold" text-anchor="middle">Figure 3.6: Software Module Hierarchy &amp; Architectural Decomposition Diagram</text>
+  <text x="800" y="62" fill="#94a3b8" font-size="13" text-anchor="middle">Structural Decomposition of InsightFlow: Frontend SPA, REST API, Core Engines, and Storage</text>
+
+  <!-- ROOT: InsightFlow System -->
+  <g transform="translate(620, 100)" filter="url(#shadow)">
+    <rect width="360" height="60" rx="8" fill="#0f172a" stroke="#1e293b" stroke-width="2"/>
+    <text x="180" y="32" font-size="16" font-weight="bold" fill="#ffffff" text-anchor="middle">InsightFlow Platform</text>
+    <text x="180" y="48" font-size="11" fill="#94a3b8" text-anchor="middle">Intelligent Workflow Analytics &amp; Accountability</text>
+  </g>
+
+  <!-- Level 1 Connectors -->
+  <line x1="800" y1="160" x2="800" y2="210" stroke="#334155" stroke-width="2"/>
+  <line x1="330" y1="210" x2="1270" y2="210" stroke="#334155" stroke-width="2"/>
+  <line x1="330" y1="210" x2="330" y2="240" stroke="#334155" stroke-width="2"/>
+  <line x1="800" y1="210" x2="800" y2="240" stroke="#334155" stroke-width="2"/>
+  <line x1="1270" y1="210" x2="1270" y2="240" stroke="#334155" stroke-width="2"/>
+
+  <!-- Level 1 Nodes -->
+  <!-- 1. Frontend Tier -->
+  <g transform="translate(130, 240)" filter="url(#shadow)">
+    <rect width="400" height="60" rx="6" fill="#eff6ff" stroke="#1d4ed8" stroke-width="2"/>
+    <text x="200" y="32" font-size="15" font-weight="bold" fill="#1e3a8a" text-anchor="middle">Presentation Tier (React 19 + Vite)</text>
+    <text x="200" y="48" font-size="11" fill="#3b82f6" text-anchor="middle">Responsive Single Page Application &amp; Pure CSS</text>
+  </g>
+
+  <!-- 2. Application & API Tier -->
+  <g transform="translate(580, 240)" filter="url(#shadow)">
+    <rect width="440" height="60" rx="6" fill="#f0fdf4" stroke="#15803d" stroke-width="2"/>
+    <text x="220" y="32" font-size="15" font-weight="bold" fill="#14532d" text-anchor="middle">Application &amp; API Tier (Django 4.2 + DRF)</text>
+    <text x="220" y="48" font-size="11" fill="#22c55e" text-anchor="middle">Business Logic, Workflow Engine &amp; Security Layer</text>
+  </g>
+
+  <!-- 3. Persistence Tier -->
+  <g transform="translate(1080, 240)" filter="url(#shadow)">
+    <rect width="380" height="60" rx="6" fill="#faf5ff" stroke="#7e22ce" stroke-width="2"/>
+    <text x="190" y="32" font-size="15" font-weight="bold" fill="#581c87" text-anchor="middle">Data Persistence Tier</text>
+    <text x="190" y="48" font-size="11" fill="#a855f7" text-anchor="middle">SQLite 3 Active / PostgreSQL Architecture Ready</text>
+  </g>
+
+  <!-- Level 2: Frontend Submodules -->
+  <line x1="330" y1="300" x2="330" y2="350" stroke="#1d4ed8" stroke-width="1.8"/>
+  <line x1="90" y1="350" x2="490" y2="350" stroke="#1d4ed8" stroke-width="1.8"/>
+
+  <!-- Submodule F1: Auth & Protected Routes -->
+  <g transform="translate(50, 380)" filter="url(#shadow)">
+    <rect width="180" height="85" rx="4" fill="#ffffff" stroke="#93c5fd" stroke-width="1.5"/>
+    <text x="90" y="24" font-size="13" font-weight="bold" fill="#0f172a" text-anchor="middle">Auth Module</text>
+    <text x="12" y="46" font-size="11" fill="#475569">• LoginPage.jsx</text>
+    <text x="12" y="62" font-size="11" fill="#475569">• AuthContext (JWT)</text>
+    <text x="12" y="78" font-size="11" fill="#475569">• ProtectedRoute Guard</text>
+  </g>
+  <line x1="140" y1="350" x2="140" y2="380" stroke="#1d4ed8" stroke-width="1.5"/>
+
+  <!-- Submodule F2: Student Workspace -->
+  <g transform="translate(245, 380)" filter="url(#shadow)">
+    <rect width="180" height="85" rx="4" fill="#ffffff" stroke="#93c5fd" stroke-width="1.5"/>
+    <text x="90" y="24" font-size="13" font-weight="bold" fill="#0f172a" text-anchor="middle">Student Workspace</text>
+    <text x="12" y="46" font-size="11" fill="#475569">• StudentDashboard</text>
+    <text x="12" y="62" font-size="11" fill="#475569">• NewRequestWizard</text>
+    <text x="12" y="78" font-size="11" fill="#475569">• RequestDetail &amp; CSAT</text>
+  </g>
+  <line x1="330" y1="350" x2="330" y2="380" stroke="#1d4ed8" stroke-width="1.5"/>
+
+  <!-- Submodule F3: Staff Workspace -->
+  <g transform="translate(50, 485)" filter="url(#shadow)">
+    <rect width="180" height="85" rx="4" fill="#ffffff" stroke="#93c5fd" stroke-width="1.5"/>
+    <text x="90" y="24" font-size="13" font-weight="bold" fill="#0f172a" text-anchor="middle">Staff Workspace</text>
+    <text x="12" y="46" font-size="11" fill="#475569">• StaffQueue (Filtered)</text>
+    <text x="12" y="62" font-size="11" fill="#475569">• StaffProcessRequest</text>
+    <text x="12" y="78" font-size="11" fill="#475569">• Transition &amp; Assign</text>
+  </g>
+
+  <!-- Submodule F4: Admin Governance -->
+  <g transform="translate(245, 485)" filter="url(#shadow)">
+    <rect width="180" height="85" rx="4" fill="#ffffff" stroke="#93c5fd" stroke-width="1.5"/>
+    <text x="90" y="24" font-size="13" font-weight="bold" fill="#0f172a" text-anchor="middle">Admin Analytics</text>
+    <text x="12" y="46" font-size="11" fill="#475569">• AdminDashboard</text>
+    <text x="12" y="62" font-size="11" fill="#475569">• DeptHealthMatrix</text>
+    <text x="12" y="78" font-size="11" fill="#475569">• Bottlenecks &amp; Trends</text>
+  </g>
+
+  <!-- Submodule F5: Shared & Theming -->
+  <g transform="translate(150, 590)" filter="url(#shadow)">
+    <rect width="180" height="70" rx="4" fill="#ffffff" stroke="#93c5fd" stroke-width="1.5"/>
+    <text x="90" y="24" font-size="13" font-weight="bold" fill="#0f172a" text-anchor="middle">Shared Infra</text>
+    <text x="12" y="46" font-size="11" fill="#475569">• NotificationContext</text>
+    <text x="12" y="62" font-size="11" fill="#475569">• ThemeContext &amp; Navbar</text>
+  </g>
+
+  <!-- Level 2: Backend Submodules -->
+  <line x1="800" y1="300" x2="800" y2="350" stroke="#15803d" stroke-width="1.8"/>
+  <line x1="560" y1="350" x2="1020" y2="350" stroke="#15803d" stroke-width="1.8"/>
+
+  <!-- Submodule B1: Core Engines -->
+  <g transform="translate(520, 380)" filter="url(#shadow)">
+    <rect width="230" height="100" rx="4" fill="#ffffff" stroke="#86efac" stroke-width="1.5"/>
+    <text x="115" y="24" font-size="13" font-weight="bold" fill="#14532d" text-anchor="middle">Core Engine Services</text>
+    <text x="12" y="46" font-size="11" fill="#334155">• WorkflowEngine (Atomic)</text>
+    <text x="12" y="62" font-size="11" fill="#334155">• SLAEngine (Deterministic)</text>
+    <text x="12" y="78" font-size="11" fill="#334155">• PredictiveEngine (Dwell)</text>
+    <text x="12" y="94" font-size="11" fill="#334155">• ERPIntegrationService</text>
+  </g>
+  <line x1="635" y1="350" x2="635" y2="380" stroke="#15803d" stroke-width="1.5"/>
+
+  <!-- Submodule B2: Security & Middleware -->
+  <g transform="translate(770, 380)" filter="url(#shadow)">
+    <rect width="230" height="100" rx="4" fill="#ffffff" stroke="#86efac" stroke-width="1.5"/>
+    <text x="115" y="24" font-size="13" font-weight="bold" fill="#14532d" text-anchor="middle">Security &amp; Gateways</text>
+    <text x="12" y="46" font-size="11" fill="#334155">• JWT Authentication</text>
+    <text x="12" y="62" font-size="11" fill="#334155">• RBAC Permissions</text>
+    <text x="12" y="78" font-size="11" fill="#334155">• API Throttling Policies</text>
+    <text x="12" y="94" font-size="11" fill="#334155">• APIVersionMiddleware</text>
+  </g>
+  <line x1="885" y1="350" x2="885" y2="380" stroke="#15803d" stroke-width="1.5"/>
+
+  <!-- Submodule B3: Domain Apps (Phase 1-4) -->
+  <g transform="translate(520, 500)" filter="url(#shadow)">
+    <rect width="480" height="160" rx="4" fill="#ffffff" stroke="#86efac" stroke-width="1.5"/>
+    <text x="240" y="24" font-size="13" font-weight="bold" fill="#14532d" text-anchor="middle">Domain Django Applications</text>
+    <text x="12" y="48" font-size="11" fill="#334155">• <tspan font-weight="bold">apps.accounts:</tspan> User, StudentProfile, StaffProfile</text>
+    <text x="12" y="66" font-size="11" fill="#334155">• <tspan font-weight="bold">apps.departments:</tspan> Department (8 Institutional Units)</text>
+    <text x="12" y="84" font-size="11" fill="#334155">• <tspan font-weight="bold">apps.workflows:</tspan> WorkflowDefinition, WorkflowStage, SLAConfig</text>
+    <text x="12" y="102" font-size="11" fill="#334155">• <tspan font-weight="bold">apps.services:</tspan> ServiceArea, ServiceCategory, DynamicFieldSchema</text>
+    <text x="12" y="120" font-size="11" fill="#334155">• <tspan font-weight="bold">apps.requests:</tspan> ServiceRequest, StageHistory, RequestFeedback</text>
+    <text x="12" y="138" font-size="11" fill="#334155">• <tspan font-weight="bold">apps.audit / assignments / comments / notifications / attachments</tspan></text>
+  </g>
+
+  <!-- Level 2: Persistence Tier Breakdown -->
+  <line x1="1270" y1="300" x2="1270" y2="380" stroke="#7e22ce" stroke-width="1.8"/>
+
+  <g transform="translate(1120, 380)" filter="url(#shadow)">
+    <rect width="300" height="280" rx="4" fill="#ffffff" stroke="#d8b4fe" stroke-width="1.5"/>
+    <text x="150" y="24" font-size="13" font-weight="bold" fill="#581c87" text-anchor="middle">Database Schema (18 Tables)</text>
+    <text x="12" y="50" font-size="11" fill="#475569">• accounts_user (12)</text>
+    <text x="12" y="68" font-size="11" fill="#475569">• accounts_student_profile (3)</text>
+    <text x="12" y="86" font-size="11" fill="#475569">• accounts_staff_profile (8)</text>
+    <text x="12" y="104" font-size="11" fill="#475569">• departments_department (8)</text>
+    <text x="12" y="122" font-size="11" fill="#475569">• workflows_definition (3)</text>
+    <text x="12" y="140" font-size="11" fill="#475569">• workflows_stage (13)</text>
+    <text x="12" y="158" font-size="11" fill="#475569">• workflows_sla_configuration (7)</text>
+    <text x="12" y="176" font-size="11" fill="#475569">• services_category (42)</text>
+    <text x="12" y="194" font-size="11" fill="#475569">• services_dynamic_field (37)</text>
+    <text x="12" y="212" font-size="11" fill="#475569">• service_requests (16)</text>
+    <text x="12" y="230" font-size="11" fill="#475569">• service_request_stage_history (40)</text>
+    <text x="12" y="248" font-size="11" fill="#475569">• audit_records (40) [Immutable Ledger]</text>
+    <text x="12" y="266" font-size="11" fill="#475569">• assignments (12), comments (16)..</text>
+  </g>
+
+  <!-- Legend & Specification -->
+  <g transform="translate(80, 750)">
+    <rect width="1440" height="470" rx="6" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.5"/>
+    <text x="24" y="32" font-size="16" font-weight="bold" fill="#0f172a">Software Module Decomposition &amp; Architectural Rationale:</text>
+    <text x="24" y="65" font-size="14" fill="#334155">1. <tspan font-weight="bold">True Hierarchical Decomposition:</tspan> Reflects the concrete modular architecture of the final InsightFlow repository, strictly derived from actual source directories.</text>
+    <text x="24" y="95" font-size="14" fill="#334155">2. <tspan font-weight="bold">Presentation Tier:</tspan> Built with React 19.2.8 and Vite 8.2.2. Operates client-side routing via React Router DOM 7.18.2 with role-guarded route components (<tspan font-style="italic">ProtectedRoute</tspan>).</text>
+    <text x="24" y="125" font-size="14" fill="#334155">3. <tspan font-weight="bold">Core Engine Decoupling:</tspan> Pure Python service classes (<tspan font-weight="bold">WorkflowEngine, SLAEngine, PredictiveEngine</tspan>) remain decoupled from HTTP controllers for independent unit testability (115/115 automated tests passed).</text>
+    <text x="24" y="155" font-size="14" fill="#334155">4. <tspan font-weight="bold">Security Hardening:</tspan> Cross-cutting middleware applies object-level department isolation, SimpleJWT bearer authentication, rate throttling (anon/user/login), and automated API version headers.</text>
+    <text x="24" y="185" font-size="14" fill="#334155">5. <tspan font-weight="bold">Data Layer Integrity:</tspan> Default zero-install SQLite 3 database with production PostgreSQL readiness configured in <tspan font-style="italic">settings/base.py</tspan>.</text>
+  </g>
+</svg>

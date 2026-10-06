@@ -31,6 +31,61 @@ As finalized during the architectural planning phase, InsightFlow strictly adher
 
 ---
 
+## 📸 Visual Walkthrough & System Screenshots
+
+InsightFlow features role-tailored interfaces and advanced empirical AI engines:
+
+### 1. Institutional Authentication & Role Gateways
+| Institutional Single Sign-On (SSO) |
+|:---:|
+| ![Login Page](docs/screenshots/01_login_page.png) |
+
+---
+
+### 2. Student Experience Portal
+| Student Dashboard & SLA Badges | Multi-Department Request Wizard |
+|:---:|:---:|
+| ![Student Dashboard](docs/screenshots/02_student_dashboard.png) | ![New Request Wizard](docs/screenshots/03_student_new_request_wizard.png) |
+
+| Request Tracking, Deterministic ETA & SIS Clearance |
+|:---:|
+| ![Request Detail SLA Tracking](docs/screenshots/04_student_request_detail_sla.png) |
+
+---
+
+### 3. Department Staff Operations
+| Departmental Active Queue | Staff Processing & Stage Progression |
+|:---:|:---:|
+| ![Staff Queue](docs/screenshots/05_staff_queue.png) | ![Staff Process Request](docs/screenshots/06_staff_process_request.png) |
+
+---
+
+### 4. Executive Command Center & Governance
+| Executive Command Center & KPIs | Department Health Matrix |
+|:---:|:---:|
+| ![Admin Command Center](docs/screenshots/07_admin_command_center.png) | ![Department Health](docs/screenshots/08_admin_department_health.png) |
+
+| Bottleneck Forensics | Intake Velocity & Trends |
+|:---:|:---:|
+| ![Bottleneck Diagnostics](docs/screenshots/09_admin_bottleneck_analysis.png) | ![Trends and Volume](docs/screenshots/10_admin_trends_volume.png) |
+
+| Master Requests Ledger | Reports, NPS & CSAT Analytics |
+|:---:|:---:|
+| ![All Requests Ledger](docs/screenshots/11_admin_all_requests_ledger.png) | ![Reports and CSAT](docs/screenshots/12_admin_reports_csat.png) |
+
+---
+
+### 5. Advanced AI Intelligence & Operational Optimizers
+| AI Statistical Anomaly Detection (Mean ± 2σ) | Predictive Demand Forecasting (7-14 Days) |
+|:---:|:---:|
+| ![Anomaly Detection](docs/screenshots/13_admin_ai_anomaly_detection.png) | ![Demand Forecast](docs/screenshots/14_admin_ai_demand_forecast.png) |
+
+| Intelligent Staff Workload Balancer & Reassignment Optimizer |
+|:---:|
+| ![Workload Balancer](docs/screenshots/15_admin_ai_workload_balancer.png) |
+
+---
+
 ## 🛠️ Technology Stack
 
 ### Backend

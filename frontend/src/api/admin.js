@@ -59,6 +59,29 @@ export const adminApi = {
     link.remove();
     window.URL.revokeObjectURL(url);
   },
+
+  // ── AI-Powered Intelligence Endpoints ──────────────────────────────────────
+
+  /** Anomaly Detection — returns statistically flagged workflow anomalies */
+  getAnomalies: async (days = 30) => {
+    const response = await apiClient.get('/admin/anomalies/', { params: { days } });
+    return response.data;
+  },
+
+  /** Demand Forecast — predicts next N days of request intake volume */
+  getDemandForecast: async (forecastDays = 7, historyDays = 60) => {
+    const response = await apiClient.get('/admin/demand-forecast/', {
+      params: { forecast_days: forecastDays, history_days: historyDays },
+    });
+    return response.data;
+  },
+
+  /** Workload Balancer — analyzes staff load and generates reassignment recommendations */
+  getWorkloadBalance: async (days = 30) => {
+    const response = await apiClient.get('/admin/workload-balance/', { params: { days } });
+    return response.data;
+  },
 };
+
 
 

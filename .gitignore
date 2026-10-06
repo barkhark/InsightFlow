@@ -39,10 +39,11 @@ db.sqlite3
 media/
 backend/media/
 
-# Project Reports & Documentation (Private / Academic Submission)
-docs/
+# Project Reports & Documentation Generated Binaries
 *.docx
-Project_Report*
+*.pdf
+docs/*.docx
+docs/*.pdf
 
 # Temp / Screenshot Scripts (not part of project)
 frontend/capture_screens.mjs
