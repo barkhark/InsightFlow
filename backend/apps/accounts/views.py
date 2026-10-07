@@ -5,6 +5,7 @@ LoginView:      POST /api/v1/auth/login/          → access + refresh tokens + 
 LogoutView:     POST /api/v1/auth/logout/         → blacklist refresh token
 MeView:         GET  /api/v1/auth/me/             → current authenticated user
 GoogleAuthView: POST /api/v1/auth/google/         → Sign in with Google OAuth2
+RegisterView:   POST /api/v1/auth/register/       → Self-register as a new student
 
 Token refresh is delegated directly to SimpleJWT's TokenRefreshView (mounted in urls.py).
 
@@ -270,3 +271,148 @@ class GoogleAuthView(APIView):
             },
             'message': welcome_msg,
         }, status=status.HTTP_200_OK)
+
+
+class RegisterView(APIView):
+    """
+    Register a new student account.
+
+    POST /api/v1/auth/register/
+    Body: {
+        "email": "...",
+        "full_name": "...",
+        "password": "...",
+        "roll_number": "...",
+        "programme": "MCA",
+        "semester": 1,
+        "division": "A"
+    }
+
+    Returns:
+        201: { success, data: { access, refresh, user }, message }
+        400: Validation error (duplicate email, missing fields, etc.)
+    """
+    permission_classes = [AllowAny]
+    authentication_classes = []
+    throttle_classes = [LoginRateThrottle]
+
+    def post(self, request):
+        from .models import StudentProfile
+        from django.contrib.auth.password_validation import validate_password
+        from django.core.exceptions import ValidationError as DjangoValidationError
+
+        data = request.data
+
+        # --- Required field validation ---
+        required = ['email', 'full_name', 'password', 'roll_number', 'programme', 'semester']
+        missing = [f for f in required if not data.get(f)]
+        if missing:
+            return Response({
+                'success': False,
+                'data': None,
+                'error': {
+                    'code': 'MISSING_FIELDS',
+                    'message': f'Required fields missing: {", ".join(missing)}.',
+                    'details': None,
+                }
+            }, status=status.HTTP_400_BAD_REQUEST)
+
+        email = str(data['email']).strip().lower()
+        full_name = str(data['full_name']).strip()
+        password = str(data['password'])
+        roll_number = str(data['roll_number']).strip().upper()
+        programme = str(data['programme']).strip()
+        division = str(data.get('division', 'A')).strip()
+
+        try:
+            semester = int(data['semester'])
+            if semester < 1 or semester > 12:
+                raise ValueError()
+        except (ValueError, TypeError):
+            return Response({
+                'success': False,
+                'data': None,
+                'error': {
+                    'code': 'INVALID_SEMESTER',
+                    'message': 'Semester must be a number between 1 and 12.',
+                    'details': None,
+                }
+            }, status=status.HTTP_400_BAD_REQUEST)
+
+        # --- Uniqueness checks ---
+        if User.objects.filter(email=email).exists():
+            return Response({
+                'success': False,
+                'data': None,
+                'error': {
+                    'code': 'EMAIL_TAKEN',
+                    'message': 'An account with this email already exists. Please sign in instead.',
+                    'details': None,
+                }
+            }, status=status.HTTP_400_BAD_REQUEST)
+
+        if StudentProfile.objects.filter(roll_number=roll_number).exists():
+            return Response({
+                'success': False,
+                'data': None,
+                'error': {
+                    'code': 'ROLL_NUMBER_TAKEN',
+                    'message': 'This roll number is already registered. Contact admin if this is an error.',
+                    'details': None,
+                }
+            }, status=status.HTTP_400_BAD_REQUEST)
+
+        # --- Password strength ---
+        try:
+            validate_password(password)
+        except DjangoValidationError as exc:
+            return Response({
+                'success': False,
+                'data': None,
+                'error': {
+                    'code': 'WEAK_PASSWORD',
+                    'message': ' '.join(exc.messages),
+                    'details': None,
+                }
+            }, status=status.HTTP_400_BAD_REQUEST)
+
+        # --- Create user + profile ---
+        try:
+            user = User.objects.create_user(
+                email=email,
+                full_name=full_name,
+                role=User.Role.STUDENT,
+                password=password,
+            )
+            StudentProfile.objects.create(
+                user=user,
+                roll_number=roll_number,
+                programme=programme,
+                semester=semester,
+                division=division,
+            )
+        except Exception as exc:
+            logger.error('Registration failed for %s: %s', email, exc)
+            return Response({
+                'success': False,
+                'data': None,
+                'error': {
+                    'code': 'REGISTRATION_FAILED',
+                    'message': 'Registration failed due to a server error. Please try again.',
+                    'details': None,
+                }
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+        logger.info('New student registered: %s (%s)', full_name, email)
+
+        # Auto-login: issue tokens immediately
+        refresh = RefreshToken.for_user(user)
+        return Response({
+            'success': True,
+            'data': {
+                'access': str(refresh.access_token),
+                'refresh': str(refresh),
+                'user': UserMeSerializer(user).data,
+            },
+            'message': f'Welcome to InsightFlow, {full_name}! Your student account has been created.',
+        }, status=status.HTTP_201_CREATED)

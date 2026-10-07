@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { useGoogleLogin } from '@react-oauth/google';
 import { useAuth } from '../../context/AuthContext';
 import { Layers, Mail, Lock, Eye, EyeOff, ArrowRight, ShieldCheck } from 'lucide-react';
@@ -462,8 +462,36 @@ export const LoginPage = () => {
           </div>
         </div>
 
+        {/* Register Link */}
+        <div style={{
+          textAlign: 'center',
+          marginTop: '1.25rem',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          gap: '0.5rem',
+        }}>
+          <span style={{ fontSize: '0.82rem', color: 'rgba(200, 220, 245, 0.65)', fontWeight: 500 }}>
+            New to InsightFlow?
+          </span>
+          <Link
+            to="/register"
+            id="go-to-register-link"
+            style={{
+              fontSize: '0.82rem',
+              color: '#38bdf8',
+              fontWeight: 700,
+              textDecoration: 'none',
+              borderBottom: '1px solid rgba(56, 189, 248, 0.4)',
+              paddingBottom: '1px',
+            }}
+          >
+            Create Account →
+          </Link>
+        </div>
+
         {/* Footer */}
-        <div style={{ textAlign: 'center', marginTop: '1.75rem' }}>
+        <div style={{ textAlign: 'center', marginTop: '1rem' }}>
           <p style={{ fontSize: '0.74rem', color: 'rgba(200, 220, 245, 0.65)', lineHeight: 1.6 }}>
             InsightFlow – Intelligent Workflow Analytics and Accountability Platform<br />
             MCA Semester III Mini Project
